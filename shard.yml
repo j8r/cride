@@ -1,0 +1,15 @@
+name: cride
+version: 0.0.1
+
+authors:
+  - Julien Reichardt <mi@jrei.ch>
+
+description: A light Crystal IDE
+
+dependencies:
+  clicr:
+    github: j8r/clicr
+  termbox:
+    github: andrewsuzuki/termbox-crystal
+
+license: ISC
