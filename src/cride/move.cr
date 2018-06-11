@@ -9,7 +9,7 @@ class Cride::Editor
     elsif absolute_y > 0
       # if there is an upper line go to the end of it
       move_up
-      if (size = @rows[absolute_y].size) > (width = TermboxBindings.tb_width - 1)
+      if (size = @@rows[absolute_y].size) > (width = TermboxBindings.tb_width - 1)
         # the line is longer than the terminal width
         @@page.x = size - width
         @@cursor.x = width
@@ -21,7 +21,7 @@ class Cride::Editor
 
   def move_right
     # if there are characters remaining
-    if absolute_x < @rows[absolute_y].size
+    if absolute_x < @@rows[absolute_y].size
       # move to right if there are characters
       if @@cursor.x < TermboxBindings.tb_width - 1
         # still space to move the cursor
@@ -30,7 +30,7 @@ class Cride::Editor
         # scroll the page to the right
         @@page.x += 1
       end
-    elsif @rows.size > absolute_y + 1
+    elsif @@rows.size > absolute_y + 1
       # else go to the next line if it exists
       @@cursor.x = @@page.x = 0
       move_down
@@ -51,7 +51,7 @@ class Cride::Editor
 
   def move_down
     # move if there is a row bellow
-    if absolute_y + 1 < @rows.size
+    if absolute_y + 1 < @@rows.size
       if @@cursor.y > TermboxBindings.tb_height - 3
         # scroll the page down if the height limit it reached
         @@page.y += 1
@@ -65,7 +65,7 @@ class Cride::Editor
 
   def adapt_end_line
     # the line if smaller than the one before
-    if absolute_x > (size = @rows[absolute_y].size)
+    if absolute_x > (size = @@rows[absolute_y].size)
       if size == 0
         # If the line is empty
         @@page.x = @@cursor.x = 0

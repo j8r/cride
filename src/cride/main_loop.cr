@@ -3,12 +3,10 @@ class Cride::Editor
   @info : Info
   @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
 
-  class_getter rows = Array(Array(Char)).new
-  @rows : Array(Array(Char)) = @@rows
-
+  class_property rows = Array(Array(Char)).new
   class_property cursor = Position.new 0, 0
-
   class_property page = Position.new 0, 0
+  class_getter color = Color.new
 
   def absolute_x
     @@cursor.x + @@page.x
@@ -26,8 +24,8 @@ class Cride::Editor
     @@cursor.y + @@page.y
   end
 
-  def initialize(@color : Color)
-    @rows << Array(Char).new
+  def initialize(@@color : Color)
+    @@rows << Array(Char).new
 
     case TermboxBindings.tb_init
     # E_UNSUPPORTED_TERMINAL
@@ -45,13 +43,13 @@ class Cride::Editor
     TermboxBindings.tb_select_output_mode Termbox::OUTPUT_256
 
     # Use red foreground, periwinkle background
-    TermboxBindings.tb_set_clear_attributes @color.fg, @color.bg
+    TermboxBindings.tb_set_clear_attributes @@color.fg, @@color.bg
 
     # Reset things
     TermboxBindings.tb_clear
 
     # Create info line
-    @info = Cride::Info.new @color.fg_info, @color.bg_info
+    @info = Cride::Info.new @@color.fg_info, @@color.bg_info
 
     render
     main_loop
@@ -80,7 +78,7 @@ class Cride::Editor
           add_char char if !char.ascii_control?
         end
       end
-      # @w.write_string Termbox::Position.new(0,0), @rows.size.to_s
+      # @w.write_string Termbox::Position.new(0,0), @@rows.size.to_s
       # @w.write_string(Position.new(0,0), @w.width.to_s + ' ' + @w.height.to_s)
       render
     end
@@ -96,10 +94,10 @@ class Cride::Editor
     #{ex.backtrace.join('\n')}
     ERR
   end
-  
+
   # Write the editor's data to a file
   def write
-    data = @rows.map(&.join).join('\n')
+    data = @@rows.map(&.join).join('\n')
     File.write "/tmp/cride", data
   end
 end

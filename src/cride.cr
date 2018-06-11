@@ -9,4 +9,4 @@ struct Cride::Position
   end
 end
 
-Cride::Editor.new Cride::Color.new
+Cride::Editor.new Cride::Color.new(fg: 15, bg: 234, line: 235)
