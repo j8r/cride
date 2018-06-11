@@ -24,7 +24,7 @@ struct Cride::Info
     # y: cursor.y / Total rows
     write 121
     write 58
-    render_number Editor.cursor.y + 1
+    render_number Editor.absolute_y + 1
     write 47
     render_number Editor.rows.size
 
@@ -34,9 +34,9 @@ struct Cride::Info
     # x: cursor.x / Total line characters
     write 120
     write 58
-    render_number Editor.cursor.x + 1
+    render_number Editor.absolute_x + 1
     write 47
-    render_number Editor.rows[Editor.cursor.y].size + 1
+    render_number Editor.rows[Editor.absolute_y].size + 1
 
     # Render remaining empty characters
     while @width < TermboxBindings.tb_width

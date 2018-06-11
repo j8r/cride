@@ -15,7 +15,7 @@ class Cride::Editor
   end
 
   def self.absolute_x
-    absolute_x
+    @@cursor.x + @@page.x
   end
 
   def absolute_y
@@ -23,7 +23,7 @@ class Cride::Editor
   end
 
   def self.absolute_y
-    absolute_y
+    @@cursor.y + @@page.y
   end
 
   def initialize(@color : Color)
@@ -57,6 +57,7 @@ class Cride::Editor
     main_loop
   end
 
+  # The main editor loop
   def main_loop
     loop do
       ev = @event_master
@@ -95,7 +96,8 @@ class Cride::Editor
     #{ex.backtrace.join('\n')}
     ERR
   end
-
+  
+  # Write the editor's data to a file
   def write
     data = @rows.map(&.join).join('\n')
     File.write "/tmp/cride", data
