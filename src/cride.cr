@@ -1,12 +1,10 @@
 require "termbox"
 require "clicr"
-require "./cride/**"
 
-struct Cride::Position
-  property x, y
-
-  def initialize(@x = 0, @y = 0)
-  end
+# Enforce editor to be a class
+class Cride::Editor
 end
+
+require "./cride/**"
 
 Cride::Editor.new Cride::Color.new(fg: 15, bg: 234, line: 235)

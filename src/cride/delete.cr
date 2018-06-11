@@ -1,27 +1,34 @@
-class Cride::Editor
-  def back_delete
-    if absolute_x > 0
-      # delete character
-      move_left
-      @@rows[absolute_y].delete_at absolute_x
-    elsif absolute_y > 0
-      # delete line
-      # got the previous line
-      move_left
+module Cride::Editor::Delete
+  extend self
 
-      # append the remaing characters to the upper line
-      @@rows[absolute_y] += @@rows.delete_at absolute_y + 1
+  def back
+    if E.absolute_x > 0
+      # delete the character
+      E::Move.left
+      E.rows[E.absolute_y].delete_at E.absolute_x
+    elsif E.absolute_y > 0
+      # go to the previous line
+      E::Move.left
+
+      # delete the line and append the remaing characters to the upper line
+      E.rows[E.absolute_y] += E.rows.delete_at E.absolute_y + 1
     end
   end
 
-  def delete
-    if absolute_x < @@rows[absolute_y].size
-      @@rows[absolute_y].delete_at absolute_x
-    elsif (down = absolute_y + 1) < @@rows.size
+  def forward
+    if E.absolute_x < E.rows[E.absolute_y].size
+      # if there are still characters one the line
+      E.rows[E.absolute_y].delete_at E.absolute_x
+    elsif (down = E.absolute_y + 1) < E.rows.size
       # delete the next line and append it to the current one
-      size = @@rows[absolute_y].size
-      @@rows[absolute_y] += @@rows.delete_at down
-      @@cursor.x = size
+      size = E.rows[E.absolute_y].size
+      E.rows[E.absolute_y] += E.rows.delete_at down
+      E.cursor_x = size
     end
+  end
+
+  def line
+    E.rows[E.absolute_y].clear
+    E.cursor_x = E.page_x = 0
   end
 end

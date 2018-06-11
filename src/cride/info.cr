@@ -1,18 +1,18 @@
 struct Cride::Info
   @fg_info_color : Int32
   @bg_info_color : Int32
-  @height : Int32 = TermboxBindings.tb_height
+  @height : Int32 = 0
   @width = 0
 
   def initialize(@fg_info_color, @bg_info_color)
   end
 
-  def write(char)
+  private def write(char)
     TermboxBindings.tb_change_cell @width, @height, char, @fg_info_color, @bg_info_color
     @width += 1
   end
 
-  def render_number(cursor)
+  private def render_number(cursor)
     cursor.to_s.each_char do |char|
       write char.ord
     end

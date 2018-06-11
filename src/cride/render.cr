@@ -1,22 +1,24 @@
-class Cride::Editor
-  def render_cell(x, y, char)
-    if y == @@cursor.y
+module Cride::Editor::Render
+  extend self
+
+  private def render_cell(x, y, char)
+    if y == E.cursor_y
       # highlight the selected line
-      TermboxBindings.tb_change_cell x, y, char, @@color.fg, @@color.line
+      TermboxBindings.tb_change_cell x, y, char, E.color.fg, E.color.line
     else
-      TermboxBindings.tb_change_cell x, y, char, @@color.fg, @@color.bg
+      TermboxBindings.tb_change_cell x, y, char, E.color.fg, E.color.bg
     end
   end
 
-  def render
+  def terminal
     TermboxBindings.tb_clear
     # Render starting at the page.y line until the end of the terminal height
-    @@rows[@@page.y..@@page.y + TermboxBindings.tb_height - 2].each_with_index do |cells, y|
+    E.rows[E.page_y..E.page_y + TermboxBindings.tb_height - 2].each_with_index do |cells, y|
       x = 0
       # Too small line to render
-      if cells[@@page.x]?
+      if cells[E.page_x]?
         # Start to render at the page.x until the end of the terminal width
-        cells[@@page.x..TermboxBindings.tb_width + @@page.x].each do |el|
+        cells[E.page_x..TermboxBindings.tb_width + E.page_x].each do |el|
           # highlight current line
           render_cell x, y, el.ord
           x += 1
@@ -28,8 +30,8 @@ class Cride::Editor
     end
 
     # Render the cursor and info, and present them to Termbox
-    TermboxBindings.tb_set_cursor @@cursor.x, @@cursor.y
-    @info.render
+    TermboxBindings.tb_set_cursor E.cursor_x, E.cursor_y
+    E.info.render
     TermboxBindings.tb_present
   end
 end
