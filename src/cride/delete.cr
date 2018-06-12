@@ -21,7 +21,7 @@ module Cride::Editor::Delete
     if E.absolute_x < E.rows[E.absolute_y].size
       # if there are still characters one the line
       E.rows[E.absolute_y].delete_at E.absolute_x
-      saved = false
+      E.saved = false
     elsif (down = E.absolute_y + 1) < E.rows.size
       # delete the next line and append it to the current one
       size = E.rows[E.absolute_y].size

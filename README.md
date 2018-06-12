@@ -2,15 +2,17 @@
 
 A light Crystal IDE
 
-![screenshot](https://i.imgur.com/ttbkmbq.png)
+![screenshot](https://i.imgur.com/UCSsnDz.png)
 
-## Usage
+## [CLI](https://github.com/j8r/clicr) usage
 
-No [CLI](https://github.com/j8r/clicr) yet
+For now build Cride (see the **Development** section below):
 
-For now run with `crystal src/cride.cr`
+`crystal build src/cride.cr`
 
-Save to `/tmp/cride` with CTRL+S
+Open a file:
+
+`./cride README.md`
 
 ## Development
 
@@ -21,6 +23,10 @@ First you need to have [Termbox installed](https://github.com/nsf/termbox#instal
 Install project dependencies
 
 `shards install`
+
+Build Cride:
+
+`crystal build src/cride`
 
 ## License
 
