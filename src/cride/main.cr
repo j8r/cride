@@ -1,13 +1,14 @@
 class Cride::Editor
   alias E = Editor
-  class_getter info = Cride::Info.new 0, 0
   @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
   class_property rows = Array(Array(Char)).new
   class_property cursor_x = 0
   class_property cursor_y = 0
   class_property page_x = 0
   class_property page_y = 0
+  class_property saved = true
   class_getter color = Color.new
+  class_getter file = "/dev/null"
 
   def absolute_x
     E.cursor_x + E.page_x
@@ -25,8 +26,16 @@ class Cride::Editor
     E.cursor_y + E.page_y
   end
 
-  def initialize(@@color : Color)
-    @@rows << Array(Char).new
+  def initialize(@@file, @@color : Color)
+    if File.exists? @@file
+      abort @@file + "can't be read because it is a directory" if !File.file? @@file
+      parse
+    else
+      @@saved = false
+    end
+
+    # Create a line if no rows
+    @@rows << Array(Char).new if @@rows.empty?
 
     case TermboxBindings.tb_init
     # E_UNSUPPORTED_TERMINAL
@@ -48,9 +57,6 @@ class Cride::Editor
 
     # Reset things
     TermboxBindings.tb_clear
-
-    # Create info line
-    @@info = Cride::Info.new @@color.fg_info, @@color.bg_info
 
     main_loop
   end
@@ -94,9 +100,28 @@ class Cride::Editor
     ERR
   end
 
+  def parse
+    array = Array(Char).new
+    File.read(@@file).each_char do |char|
+      if char == '\n'
+        @@rows << array
+        array = Array(Char).new
+      else
+        array << char
+      end
+    end
+  end
+
   # Write the editor's data to a file
   def write
-    data = @@rows.map(&.join).join('\n')
-    File.write "/tmp/cride", data
+    data = String.build do |str|
+      E.rows.each do |line|
+        str << '\n'
+        line.each { |char| str << char }
+      end
+      # Remove the first \n
+    end.lchop
+    File.write @@file, data
+    E.saved = true
   end
 end

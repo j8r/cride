@@ -7,4 +7,4 @@ end
 
 require "./cride/**"
 
-Cride::Editor.new Cride::Color.new(fg: 15, bg: 234, line: 235)
+Cride::Editor.new(file: "/tmp/cride", color: Cride::Color.new(fg: 15, bg: 234, line: 235))

@@ -12,10 +12,13 @@ module Cride::Editor::Render
 
   def terminal
     TermboxBindings.tb_clear
+    # Render the cursor and info, and present them to Termbox
+    TermboxBindings.tb_set_cursor E.cursor_x, E.cursor_y
+
     # Render starting at the page.y line until the end of the terminal height
     E.rows[E.page_y..E.page_y + TermboxBindings.tb_height - 2].each_with_index do |cells, y|
       x = 0
-      # Too small line to render
+      # The line if wide enough to render
       if cells[E.page_x]?
         # Start to render at the page.x until the end of the terminal width
         cells[E.page_x..TermboxBindings.tb_width + E.page_x].each do |el|
@@ -28,10 +31,7 @@ module Cride::Editor::Render
         render_cell loc, y, 32 # Char
       end
     end
-
-    # Render the cursor and info, and present them to Termbox
-    TermboxBindings.tb_set_cursor E.cursor_x, E.cursor_y
-    E.info.render
+    E::Info.new
     TermboxBindings.tb_present
   end
 end

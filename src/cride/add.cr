@@ -4,6 +4,7 @@ module Cride::Editor::Add
   def char(char)
     E.rows[E.absolute_y].insert E.absolute_x, char
     E::Move.right
+    E.saved = false
   end
 
   def line
@@ -18,10 +19,12 @@ module Cride::Editor::Add
     # Move the cursor down at the begining of the line
     E.cursor_x = E.page_x = 0
     E::Move.down
+    E.saved = false
   end
 
   def duplicate_line
     E.rows.insert E.absolute_y + 1, E.rows[E.absolute_y].dup
     E::Move.down
+    E.saved = false
   end
 end

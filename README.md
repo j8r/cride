@@ -22,4 +22,6 @@ Install project dependencies
 
 `shards install`
 
+## License
 
+Copyright (c) 2018 Julien Reichardt - ISC License
