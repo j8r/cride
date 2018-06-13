@@ -56,7 +56,7 @@ class Cride::Editor
     # Reset things
     TermboxBindings.tb_clear
 
-    STDIN.read_timeout = 0.1
+    STDIN.read_timeout = 0
     stdin = STDIN.gets_to_end
     if !stdin.empty?
       parse stdin
@@ -119,7 +119,14 @@ class Cride::Editor
         array << char
       end
     end
-    @@rows << array if !array.empty?
+
+    @@rows << if array.empty?
+      # line has a new empty line - create one
+      Array(Char).new
+    else
+      # append the remaining characters
+      array
+    end
   end
 
   # Write the editor's data to a file
