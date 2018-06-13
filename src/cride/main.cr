@@ -88,7 +88,10 @@ class Cride::Editor
         when Termbox::KEY_ARROW_RIGHT                                   then Move.right
         when Termbox::KEY_ARROW_UP                                      then Move.up
         when Termbox::KEY_ARROW_DOWN                                    then Move.down
+        when Termbox::KEY_PGUP                                          then Move.page_up
+        when Termbox::KEY_PGDN                                          then Move.page_down
         when Termbox::KEY_ENTER                                         then Add.line
+        when Termbox::KEY_TAB                                           then Add.char '\t'
         when Termbox::KEY_SPACE                                         then Add.char ' '
         else
           char = ev.ch.unsafe_chr

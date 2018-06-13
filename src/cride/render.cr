@@ -2,12 +2,13 @@ module Cride::Editor::Render
   extend self
 
   private def render_cell(x, y, char)
-    if y == E.cursor_y
+    bg = if y == E.cursor_y
       # highlight the selected line
-      TermboxBindings.tb_change_cell x, y, char, E.color.fg, E.color.line
+      E.color.line
     else
-      TermboxBindings.tb_change_cell x, y, char, E.color.fg, E.color.bg
+      E.color.bg
     end
+    TermboxBindings.tb_change_cell x, y, char, E.color.fg, bg
   end
 
   def terminal

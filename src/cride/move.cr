@@ -81,4 +81,36 @@ module Cride::Editor::Move
       end
     end
   end
+  
+  def page_up
+    height = TermboxBindings.tb_height - 2
+    if E.absolute_y == 0
+      E.cursor_x = 0
+    elsif E.page_y - height >= 0
+      # enough to scroll up
+      E.page_y -= height
+      adapt_end_line
+    else
+      E.page_y = E.cursor_y = 0
+      adapt_end_line
+    end
+  end
+  
+  def page_down
+    rows_size = E.rows.size - 1
+    height = TermboxBindings.tb_height - 2
+    if E.absolute_y == rows_size
+      # at the end of the file
+      E.cursor_x = E.rows[rows_size].size
+    elsif E.page_y + height < rows_size
+      # enough to scroll down
+      E.page_y += height
+      adapt_end_line
+    else
+      # the end is less than the height size
+      E.page_y = rows_size - height
+      E.cursor_y = height
+      adapt_end_line
+    end
+  end
 end
