@@ -6,7 +6,7 @@ class Cride::Editor
   class_property cursor_y = 0
   class_property page_x = 0
   class_property page_y = 0
-  class_property saved = true
+  class_property saved = false
   class_getter color = Color.new
   class_getter file = ""
 
@@ -32,17 +32,8 @@ class Cride::Editor
     @@cursor_y = 0
     @@page_x = 0
     @@page_y = 0
-    @@saved = true
+    @@saved = false
     @@rows = Array(Array(Char)).new
-    if File.exists? @@file
-      abort @@file + "can't be read because it is a directory" if !File.file? @@file
-      parse
-    else
-      @@saved = false
-    end
-
-    # Create a line if no rows
-    @@rows << Array(Char).new if @@rows.empty?
 
     case TermboxBindings.tb_init
     # E_UNSUPPORTED_TERMINAL
@@ -65,6 +56,17 @@ class Cride::Editor
     # Reset things
     TermboxBindings.tb_clear
 
+    STDIN.read_timeout = 0.1
+    stdin = STDIN.gets_to_end
+    if !stdin.empty?
+      parse stdin
+    elsif File.exists? @@file
+      abort @@file + "can't be read because it is a directory" if !File.file? @@file
+      parse File.read(@@file)
+      @@saved = true
+    end
+
+    @@rows << Array(Char).new if @@rows.empty?
     main_loop
   end
 
@@ -107,9 +109,9 @@ class Cride::Editor
     ERR
   end
 
-  def parse
+  def parse(data)
     array = Array(Char).new
-    File.read(@@file).each_char do |char|
+    data.each_char do |char|
       if char == '\n'
         @@rows << array
         array = Array(Char).new
@@ -117,6 +119,7 @@ class Cride::Editor
         array << char
       end
     end
+    @@rows << array if !array.empty?
   end
 
   # Write the editor's data to a file

@@ -4,6 +4,12 @@ A light Crystal IDE
 
 ![screenshot](https://i.imgur.com/UCSsnDz.png)
 
+## Features
+
+* Light, fast and easy to use
+* Customizable
+* Read from the stdin
+
 ## [CLI](https://github.com/j8r/clicr) usage
 
 For now build Cride (see the **Development** section below):
