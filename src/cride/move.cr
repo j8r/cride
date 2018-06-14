@@ -106,10 +106,14 @@ module Cride::Editor::Move
       # enough to scroll down
       E.page_y += height
       adapt_end_line
-    else
-      # the end is less than the height size
+    elsif rows_size > height
+      # the line number is greater than the height
       E.page_y = rows_size - height
       E.cursor_y = height
+      adapt_end_line
+    else
+      # the line number is smaller than the height
+      E.cursor_y = rows_size
       adapt_end_line
     end
   end
