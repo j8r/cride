@@ -1,4 +1,4 @@
-struct Cride::Color
+struct Cride::Terminal::Color
   getter fg, bg, line, fg_info, bg_info, not_saved
 
   def initialize(
