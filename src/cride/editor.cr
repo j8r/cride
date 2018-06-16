@@ -6,8 +6,7 @@ struct Cride::Editor
   getter move : Move
   getter size : Size
 
-  def initialize(file, @size)
-    @file = Cride::FileHandler.new file
+  def initialize(@file, @size)
     @move = Cride::Editor::Move.new @file, @position, @size
     @add = Cride::Editor::Add.new @file, @position, @move
     @delete = Cride::Editor::Delete.new @file, @position, @move

@@ -1,13 +1,13 @@
 struct Cride::FileHandler::Add
   @rows : Array(Array(Char))
-  @saved : Bool
+  @saved : Pointer(Bool)
 
   def initialize(@rows, @saved)
   end
 
   def char(x, y, char)
     @rows[y].insert x, char
-    @saved = false
+    @saved.value = false
   end
 
   def line(x, y)
@@ -18,11 +18,11 @@ struct Cride::FileHandler::Add
 
     # Append to the new array
     @rows.insert y + 1, new_array
-    @saved = false
+    @saved.value = false
   end
 
   def duplicate_line(x, y)
     @rows.insert y + 1, @rows[y].dup
-    @saved = false
+    @saved.value = false
   end
 end

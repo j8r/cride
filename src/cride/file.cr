@@ -17,8 +17,8 @@ class Cride::FileHandler
     end
   ensure
     @rows << Array(Char).new if @rows.empty?
-    @add = Add.new @rows, @saved
-    @delete = Delete.new @rows, @saved
+    @add = Add.new @rows, pointerof(@saved)
+    @delete = Delete.new @rows, pointerof(@saved)
   end
 
   def parse(data)

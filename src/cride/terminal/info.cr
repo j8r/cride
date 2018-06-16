@@ -2,7 +2,7 @@ struct Cride::Terminal::Info
   @height = 0
   @width = 0
   @editor : Cride::Editor
-  @color : Cride::Terminal::Color
+  @color : Color
 
   def initialize(@editor, @color)
   end
