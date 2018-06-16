@@ -1,35 +1,25 @@
 struct Cride::Editor::Add
   @file : Cride::FileHandler
   @position : Cride::Position
-  @move : Cride::Editor::Move
+  @move : Move
 
   def initialize(@file, @position, @move)
   end
 
   def char(char)
-    @file.rows[@position.absolute_y].insert @position.absolute_x, char
+    @file.add.char @position.absolute_x, @position.absolute_y, char
     @move.right
-    @file.saved = false
   end
 
   def line
-    old = @file.rows[@position.absolute_y]
-
-    # Remove the character after the cursor
-    new_array = old.pop old.size - @position.absolute_x
-
-    # Append to the new array
-    @file.rows.insert @position.absolute_y + 1, new_array
-
+    @file.add.line @position.absolute_x, @position.absolute_y
     # Move the cursor down at the begining of the line
     @position.cursor_x = @position.page_x = 0
     @move.down
-    @file.saved = false
   end
 
   def duplicate_line
-    @file.rows.insert @position.absolute_y + 1, @file.rows[@position.absolute_y].dup
+    @file.add.duplicate_line @position.absolute_x, @position.absolute_y
     @move.down
-    @file.saved = false
   end
 end

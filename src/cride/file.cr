@@ -2,6 +2,8 @@ class Cride::FileHandler
   property rows = Array(Array(Char)).new
   property saved = false
   property name = ""
+  getter add : Add
+  getter delete : Delete
 
   def initialize(@name = "")
     STDIN.read_timeout = 0
@@ -15,6 +17,8 @@ class Cride::FileHandler
     end
   ensure
     @rows << Array(Char).new if @rows.empty?
+    @add = Add.new @rows, @saved
+    @delete = Delete.new @rows, @saved
   end
 
   def parse(data)

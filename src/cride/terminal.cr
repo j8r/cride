@@ -73,7 +73,9 @@ struct Cride::Terminal
     TermboxBindings.tb_shutdown
     puts <<-ERR
     An error as occured. Please create an issue at https://github.com/j8r/cride with the steps to how reproduce this bug.
-
+    
+    cursor: #{@editor.position.cursor_x}, #{@editor.position.cursor_y}
+    page: #{@editor.position.page_y}, #{@editor.position.page_y}
     Message: "#{ex.message}"
     Backtrace:
     #{ex.backtrace.join('\n')}

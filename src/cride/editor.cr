@@ -1,10 +1,10 @@
 struct Cride::Editor
   getter position = Position.new
   getter file : Cride::FileHandler
-  getter size : Cride::Size
-  getter add : Cride::Editor::Add
-  getter delete : Cride::Editor::Delete
-  getter move : Cride::Editor::Move
+  getter add : Add
+  getter delete : Delete
+  getter move : Move
+  getter size : Size
 
   def initialize(file, @size)
     @file = Cride::FileHandler.new file

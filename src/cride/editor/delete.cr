@@ -1,44 +1,40 @@
 struct Cride::Editor::Delete
   @file : Cride::FileHandler
   @position : Cride::Position
-  @move : Cride::Editor::Move
+  @move : Move
 
   def initialize(@file, @position, @move)
   end
 
   def back
     if @position.absolute_x > 0
-      # delete the character
       @move.left
-      @file.rows[@position.absolute_y].delete_at @position.absolute_x
-      @file.saved = false
+      @file.delete.char @position.absolute_x, @position.absolute_y
     elsif @position.absolute_y > 0
       # go to the previous line
       @move.left
-
-      # delete the line and append the remaing characters to the upper line
-      @file.rows[@position.absolute_y] += @file.rows.delete_at @position.absolute_y + 1
-      @file.saved = false
+      @file.delete.line_append_previous @position.absolute_y
     end
   end
 
   def forward
     if @position.absolute_x < @file.rows[@position.absolute_y].size
       # if there are still characters one the line
-      @file.rows[@position.absolute_y].delete_at @position.absolute_x
-      @file.saved = false
-    elsif (down = @position.absolute_y + 1) < @file.rows.size
+      @file.delete.char @position.absolute_x, @position.absolute_y
+    elsif @position.absolute_y + 1 < @file.rows.size
       # delete the next line and append it to the current one
       size = @file.rows[@position.absolute_y].size
-      @file.rows[@position.absolute_y] += @file.rows.delete_at down
+
+      # no chars but still next lines
+      @file.delete.next_line_append_current @position.absolute_y
+
       @position.cursor_x = size
-      @file.saved = false
     end
   end
 
   def line
-    @file.rows[@position.absolute_y].clear
+    @file.delete.line @position.absolute_y
+    # Reset position
     @position.cursor_x = @position.page_x = 0
-    @file.saved = false
   end
 end
