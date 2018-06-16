@@ -16,23 +16,31 @@ struct Cride::Terminal::Render
   end
 
   def editor
+    tab_spaces = 4
     TermboxBindings.tb_clear
+    
     # Render the cursor and info, and present them to Termbox
     TermboxBindings.tb_set_cursor @editor.position.cursor_x, @editor.position.cursor_y
 
     # Render starting at the page_y line until the end of the terminal height
-    @editor.file.rows[@editor.position.page_y..@editor.position.page_y + @editor.size.height].each_with_index do |cells, y|
+    @editor.file.rows[@editor.position.page_y..@editor.position.page_y + @editor.size.height].each_with_index do |row, y|
       x = 0
-      # The line if wide enough to render
-      if cells[@editor.position.page_x]?
-        # Start to render at the page_x until the end of the terminal width
-        cells[@editor.position.page_x..TermboxBindings.tb_width + @editor.position.page_x].each do |el|
-          # highlight current line
-          render_cell x, y, el.ord
+      width = @editor.size.width + 1 + (tab_spaces * row.count('\t'))
+      # Start to render at the page_x until the end of the terminal width
+      row[@editor.position.page_x..width].each do |char|
+        # highlight current line
+        if char == '\t'
+          tab_spaces.times do
+            render_cell x, y, 32
+            x += 1
+          end
+        else
+          render_cell x, y, char.ord
           x += 1
         end
       end
-      (x...TermboxBindings.tb_width).each do |loc|
+      # fill empty cells with spaces
+      (x...width).each do |loc|
         render_cell loc, y, 32 # Char
       end
     end

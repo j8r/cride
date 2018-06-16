@@ -62,11 +62,12 @@ struct Cride::Editor::Move
       if @position.cursor_y > @size.height - 1
         # scroll the page down if the height limit it reached
         @position.page_y += 1
+        adapt_end_line
       else
         # else only move the cursor
         @position.cursor_y += 1
+        adapt_end_line
       end
-      adapt_end_line
     end
   end
 
@@ -90,7 +91,7 @@ struct Cride::Editor::Move
   def page_up
     if @position.absolute_y == 0
       @position.cursor_x = 0
-    elsif @position.page_y - @size.height >= 0
+    elsif @position.page_y > @size.height
       # enough to scroll up
       @position.page_y -= @size.height
       adapt_end_line
@@ -102,10 +103,10 @@ struct Cride::Editor::Move
 
   def page_down
     rows_size = @file.rows.size - 1
-    if @position.absolute_y == rows_size
+    if rows_size == @position.absolute_y
       # at the end of the file
       @position.cursor_x = @file.rows[rows_size].size
-    elsif @position.page_y + @size.height < rows_size
+    elsif rows_size > @position.page_y + @size.height
       # enough to scroll down
       @position.page_y += @size.height
       adapt_end_line
