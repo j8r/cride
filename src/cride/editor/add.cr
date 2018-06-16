@@ -1,6 +1,6 @@
 struct Cride::Editor::Add
   @file : Cride::FileHandler
-  @position : Cride::Position
+  @position : Position
   @move : Move
 
   def initialize(@file, @position, @move)
@@ -14,7 +14,7 @@ struct Cride::Editor::Add
   def line
     @file.add.line @position.absolute_x, @position.absolute_y
     # Move the cursor down at the begining of the line
-    @position.cursor_x = @position.page_x = 0
+    @position.reset_x
     @move.down
   end
 

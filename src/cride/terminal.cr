@@ -3,13 +3,9 @@ require "termbox"
 struct Cride::Terminal
   @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
   getter color : Color
-  getter size = Cride::Size.new TermboxBindings.tb_width - 1, TermboxBindings.tb_height - 1
+  getter size : Cride::Size
 
   def initialize(file = "", @color = Color.new)
-    @editor = Cride::Editor.new file, @size
-    @render = Render.new @editor, @color
-    @info = Info.new @editor, @color
-
     case TermboxBindings.tb_init
     # E_UNSUPPORTED_TERMINAL
     when -1 then raise "Terminal unsupported."
@@ -30,6 +26,12 @@ struct Cride::Terminal
 
     # Reset things
     TermboxBindings.tb_clear
+
+    # Create instance variables
+    @size = Cride::Size.new TermboxBindings.tb_width - 1, TermboxBindings.tb_height - 2
+    @editor = Cride::Editor.new file, @size
+    @render = Render.new @editor, @color
+    @info = Info.new @editor, @color
 
     main_loop
   end

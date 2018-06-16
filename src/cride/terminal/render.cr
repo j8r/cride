@@ -1,6 +1,6 @@
 struct Cride::Terminal::Render
   @editor : Cride::Editor
-  @color : Cride::Terminal::Color
+  @color : Color
 
   def initialize(@editor, @color)
   end
@@ -18,7 +18,7 @@ struct Cride::Terminal::Render
   def editor
     tab_spaces = 4
     TermboxBindings.tb_clear
-    
+
     # Render the cursor and info, and present them to Termbox
     TermboxBindings.tb_set_cursor @editor.position.cursor_x, @editor.position.cursor_y
 

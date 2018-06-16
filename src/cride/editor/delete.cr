@@ -1,6 +1,6 @@
 struct Cride::Editor::Delete
   @file : Cride::FileHandler
-  @position : Cride::Position
+  @position : Position
   @move : Move
 
   def initialize(@file, @position, @move)
@@ -35,6 +35,6 @@ struct Cride::Editor::Delete
   def line
     @file.delete.line @position.absolute_y
     # Reset position
-    @position.cursor_x = @position.page_x = 0
+    @position.reset_x
   end
 end

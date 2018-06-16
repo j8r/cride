@@ -13,21 +13,6 @@ struct Cride::Editor
   end
 end
 
-class Cride::Position
-  property cursor_x : Int32, cursor_y : Int32, page_x : Int32, page_y : Int32
-
-  def initialize(@cursor_x = 0, @cursor_y = 0, @page_x = 0, @page_y = 0)
-  end
-
-  def absolute_x : Int32
-    @cursor_x + @page_x
-  end
-
-  def absolute_y : Int32
-    @cursor_y + @page_y
-  end
-end
-
 class Cride::Size
   property width : Int32, height : Int32
 
