@@ -30,11 +30,13 @@ struct Cride::Terminal::Info
     write 32
 
     # x: cursor_x / Total line characters
+    row = @editor.file.rows[@editor.position.absolute_y]
     write 120
     write 58
-    render_string (@editor.position.absolute_x + 1).to_s
+
+    render_string (@editor.position.absolute_x + 1 + @editor.tab_before_absolute_width row).to_s
     write 47
-    render_string (@editor.file.rows[@editor.position.absolute_y].size + 1).to_s
+    render_string (row.size + 1 + @editor.tab_width row).to_s
   end
 
   def render

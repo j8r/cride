@@ -11,3 +11,10 @@ struct Cride::Terminal::Color
   )
   end
 end
+
+@[Flags]
+enum Cride::Terminal::Color::Attribute
+  Bold      = 256
+  Underline
+  Reverse
+end

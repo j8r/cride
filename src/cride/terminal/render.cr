@@ -15,23 +15,30 @@ struct Cride::Terminal::Render
     TermboxBindings.tb_change_cell x, y, char, @color.fg, bg
   end
 
-  def editor
-    tab_spaces = 4
-    TermboxBindings.tb_clear
+  private def cursor
+    row = @editor.file.rows[@editor.position.absolute_y]
+
+    cursor_x = @editor.position.absolute_x + @editor.tab_before_absolute_width row
+    cursor_x -= @editor.tab_spaces - 1 if row[@editor.position.cursor_x]? == '\t'
 
     # Render the cursor and info, and present them to Termbox
-    TermboxBindings.tb_set_cursor @editor.position.cursor_x, @editor.position.cursor_y
+    TermboxBindings.tb_set_cursor cursor_x, @editor.position.cursor_y
+  end
+
+  def editor
+    TermboxBindings.tb_clear
+    cursor
 
     # Render starting at the page_y line until the end of the terminal height
     @editor.file.rows[@editor.position.page_y..@editor.position.page_y + @editor.size.height].each_with_index do |row, y|
       x = 0
-      width = @editor.size.width + 1 + (tab_spaces * row.count('\t'))
+      width = @editor.size.width + 1 + @editor.tab_width row
       # Start to render at the page_x until the end of the terminal width
       if row[@editor.position.page_x]?
         row[@editor.position.page_x..@editor.position.page_x + width].each do |char|
           # highlight current line
           if char == '\t'
-            tab_spaces.times do
+            @editor.tab_spaces.times do
               render_cell x, y, 32
               x += 1
             end

@@ -16,10 +16,10 @@ struct Cride::Terminal
     end
 
     # Set input mode (ESC mode with mouse enabled)
-    TermboxBindings.tb_select_input_mode Termbox::INPUT_ESC | Termbox::INPUT_MOUSE
+    TermboxBindings.tb_select_input_mode Input::Esc.value | Input::Mouse.value
 
     # Use 256 color mode
-    TermboxBindings.tb_select_output_mode Termbox::OUTPUT_256
+    TermboxBindings.tb_select_output_mode Output::C_256.value
 
     # Use red foreground, periwinkle background
     TermboxBindings.tb_set_clear_attributes @color.fg, @color.bg
@@ -46,23 +46,23 @@ struct Cride::Terminal
       TermboxBindings.tb_poll_event pointerof(ev)
       @size.width = TermboxBindings.tb_width - 1
       @size.height = TermboxBindings.tb_height - 2
-      if ev.type == Termbox::EVENT_KEY
+      if ev.type == Event::Key.value
         case ev.key
-        when Termbox::KEY_CTRL_C, Termbox::KEY_CTRL_Q, Termbox::KEY_ESC then break
-        when Termbox::KEY_CTRL_S                                        then @editor.file.write
-        when Termbox::KEY_CTRL_D                                        then @editor.add.duplicate_line
-        when Termbox::KEY_CTRL_K                                        then @editor.delete.line
-        when Termbox::KEY_BACKSPACE, Termbox::KEY_BACKSPACE2            then @editor.delete.back
-        when Termbox::KEY_DELETE                                        then @editor.delete.forward
-        when Termbox::KEY_ARROW_LEFT                                    then @editor.move.left
-        when Termbox::KEY_ARROW_RIGHT                                   then @editor.move.right
-        when Termbox::KEY_ARROW_UP                                      then @editor.move.up
-        when Termbox::KEY_ARROW_DOWN                                    then @editor.move.down
-        when Termbox::KEY_PGUP                                          then @editor.move.page_up
-        when Termbox::KEY_PGDN                                          then @editor.move.page_down
-        when Termbox::KEY_ENTER                                         then @editor.add.line
-        when Termbox::KEY_TAB                                           then @editor.add.char '\t'
-        when Termbox::KEY_SPACE                                         then @editor.add.char ' '
+        when Ctrl::C.value, Ctrl::Q.value, Key::ESC.value then break
+        when Ctrl::S.value                                then @editor.file.write
+        when Ctrl::D.value                                then @editor.add.duplicate_line
+        when Ctrl::K.value                                then @editor.delete.line
+        when Ctrl::H.value, Key::BACKSPACE2.value         then @editor.delete.back
+        when Key::DELETE.value                            then @editor.delete.forward
+        when Key::ARROW_LEFT.value                        then @editor.move.left
+        when Key::ARROW_RIGHT.value                       then @editor.move.right
+        when Key::ARROW_UP.value                          then @editor.move.up
+        when Key::ARROW_DOWN.value                        then @editor.move.down
+        when Key::PGUP.value                              then @editor.move.page_up
+        when Key::PGDN.value                              then @editor.move.page_down
+        when Key::ENTER.value                             then @editor.add.line
+        when Key::TAB.value                               then @editor.add.char '\t'
+        when Key::SPACE.value                             then @editor.add.char ' '
         else
           char = ev.ch.unsafe_chr
           @editor.add.char char if !char.ascii_control?
