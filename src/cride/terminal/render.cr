@@ -27,16 +27,18 @@ struct Cride::Terminal::Render
       x = 0
       width = @editor.size.width + 1 + (tab_spaces * row.count('\t'))
       # Start to render at the page_x until the end of the terminal width
-      row[@editor.position.page_x..width].each do |char|
-        # highlight current line
-        if char == '\t'
-          tab_spaces.times do
-            render_cell x, y, 32
+      if row[@editor.position.page_x]?
+        row[@editor.position.page_x..@editor.position.page_x + width].each do |char|
+          # highlight current line
+          if char == '\t'
+            tab_spaces.times do
+              render_cell x, y, 32
+              x += 1
+            end
+          else
+            render_cell x, y, char.ord
             x += 1
           end
-        else
-          render_cell x, y, char.ord
-          x += 1
         end
       end
       # fill empty cells with spaces

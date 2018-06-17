@@ -27,7 +27,6 @@ struct Cride::Editor::Move
   end
 
   def right
-    # if there are characters remaining
     if @position.absolute_x < @file.rows[@position.absolute_y].size
       # move to right if there are characters
       if @position.cursor_x < @size.width
@@ -78,8 +77,8 @@ struct Cride::Editor::Move
   end
 
   def adapt_end_line
-    # the line if smaller than the one before
     if @position.absolute_x > (line_size = @file.rows[@position.absolute_y].size)
+      # the line if smaller than the one before
       if line_size == 0
         # If the line is empty
         @position.reset_x
