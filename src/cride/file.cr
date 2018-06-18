@@ -7,12 +7,11 @@ class Cride::FileHandler
 
   def initialize(@name = "")
     STDIN.read_timeout = 0
-    stdin = STDIN.gets_to_end
-    parse stdin
+    parse STDIN.gets_to_end
   rescue ex : IO::Timeout
     if File.exists? @name
       abort @name + "can't be read because it is a directory" if !File.file? @name
-      parse File.read @name
+      parse File.open @name
       @saved = true
     end
   ensure
@@ -22,22 +21,8 @@ class Cride::FileHandler
   end
 
   def parse(data)
-    array = Array(Char).new
-    data.each_char do |char|
-      if char == '\n'
-        @rows << array
-        array = Array(Char).new
-      else
-        array << char
-      end
-    end
-
-    @rows << if array.empty?
-      # line has a new empty line - create one
-      Array(Char).new
-    else
-      # append the remaining characters
-      array
+    data.each_line do |line|
+      @rows << line.chars
     end
   end
 

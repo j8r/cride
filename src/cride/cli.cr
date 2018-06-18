@@ -27,7 +27,7 @@ module Cride::CLI
 
     # open files
     files.each do |file|
-      Cride::Terminal.new file: Cride::FileHandler.new(file), color: Cride::Terminal::Color.new(fg: 7, bg: 234, line: 235)
+      Cride::Terminal.new file: Cride::FileHandler.new(file), color: Cride::Terminal::Color.new(fg: 7, bg: 234, line: 236)
     end
   end
 end
