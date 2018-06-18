@@ -22,12 +22,21 @@ module Cride::CLI
     end
   end
 
-  private def open_files(files, yes)
-    files << "" if files.empty?
+  private def new_terminal(file : Cride::FileHandler)
+    Cride::Terminal.new file: file, color: Cride::Terminal::Color.new(fg: 7, bg: 234, line: 236)
+  end
 
-    # open files
-    files.each do |file|
-      Cride::Terminal.new file: Cride::FileHandler.new(file), color: Cride::Terminal::Color.new(fg: 7, bg: 234, line: 236)
+  private def open_files(files, yes)
+    STDIN.read_timeout = 0
+    new_terminal Cride::FileHandler.new STDIN.gets_to_end
+  rescue ex : IO::Timeout
+    if files.empty?
+      new_terminal Cride::FileHandler.new
+    else
+      files.each do |file|
+        abort file + "can't be read because it is a directory" if !File.file? file
+        new_terminal Cride::FileHandler.new(File.read(file), file, true)
+      end
     end
   end
 end

@@ -5,7 +5,7 @@ struct Cride::Terminal
   getter color : Color
   getter size : Cride::Size
 
-  def initialize(file = "", @color = Color.new)
+  def initialize(file : Cride::FileHandler, @color = Color.new)
     case TermboxBindings.tb_init
     # E_UNSUPPORTED_TERMINAL
     when -1 then raise "Terminal unsupported."
