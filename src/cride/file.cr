@@ -9,7 +9,11 @@ class Cride::FileHandler
     data.each_line do |line|
       @rows << line.chars
     end
-    @rows << Array(Char).new if !@rows.last.empty?
+    if @rows.empty?
+      @rows << Array(Char).new
+    elsif !@rows.last.empty?
+      @rows << Array(Char).new
+    end
 
     @add = Add.new @rows, pointerof(@saved)
     @delete = Delete.new @rows, pointerof(@saved)
