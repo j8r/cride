@@ -34,8 +34,13 @@ module Cride::CLI
       new_terminal Cride::FileHandler.new
     else
       files.each do |file|
-        abort file + " can't be read because it is a directory" if !File.file? file
-        new_terminal Cride::FileHandler.new(File.read(file), file, true)
+        if File.directory? file
+          abort file + " can't be read because it is a directory"
+        elsif File.exists? file
+          new_terminal Cride::FileHandler.new(File.read(file), file, true)
+        else
+          new_terminal Cride::FileHandler.new("", file, false)
+        end
       end
     end
   end
