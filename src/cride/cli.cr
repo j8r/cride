@@ -7,12 +7,6 @@ module Cride::CLI
       info: "A light Crystal IDE/editor",
       arguments: %w(files...),
       action: open_files,
-      options: {
-        yes: {
-          short: 'y',
-          info:  "Print the name",
-        },
-      }
     )
   rescue ex
     puts ex
@@ -26,7 +20,7 @@ module Cride::CLI
     Cride::Terminal.new file: file, color: Cride::Terminal::Color.new(fg: 7, bg: 234, line: 236)
   end
 
-  private def open_files(files, yes)
+  private def open_files(files)
     STDIN.read_timeout = 0
     new_terminal Cride::FileHandler.new STDIN.gets_to_end
   rescue ex : IO::Timeout
@@ -34,9 +28,10 @@ module Cride::CLI
       new_terminal Cride::FileHandler.new
     else
       files.each do |file|
-        if File.directory? file
+        case File
+        when .directory? file
           abort file + " can't be read because it is a directory"
-        elsif File.exists? file
+        when .exists? file
           new_terminal Cride::FileHandler.new(File.read(file), file, true)
         else
           new_terminal Cride::FileHandler.new("", file, false)

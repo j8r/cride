@@ -7,10 +7,12 @@ struct Cride::Editor::Delete
   end
 
   def back
-    if @position.absolute_x > 0
+    case 0
+    when .< @position.absolute_x
+      # move left to delete the previous character on the line
       @move.left
       @file.delete.char @position.absolute_x, @position.absolute_y
-    elsif @position.absolute_y > 0
+    when .< @position.absolute_y
       # go to the previous line
       @move.left
       @file.delete.line_append_previous @position.absolute_y
@@ -25,16 +27,14 @@ struct Cride::Editor::Delete
       # delete the next line and append it to the current one
       size = @file.rows[@position.absolute_y].size
 
-      # no chars but still next lines
+      # no chars left on the line but still lines next
       @file.delete.next_line_append_current @position.absolute_y
-
       @position.cursor_x = size
     end
   end
 
   def line
     @file.delete.line @position.absolute_y
-    # Reset position
     @position.reset_x
   end
 end

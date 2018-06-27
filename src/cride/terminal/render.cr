@@ -41,7 +41,7 @@ struct Cride::Terminal::Render
       end
       # fill empty cells with spaces
       (x...width).each do |loc|
-        render_cell loc, y, 32 # Char
+        render_cell loc, y, 32 # Space
       end
     end
   end

@@ -7,13 +7,14 @@ struct Cride::Editor::Move
   end
 
   def left
-    if @position.cursor_x > 0
+    case 0
+    when .< @position.cursor_x
       # move the cursor left - there are still characters
       @position.cursor_x -= 1
-    elsif @position.page_x > 0
+    when .< @position.page_x
       # scroll the page to the left if it was previously scrolled
       @position.page_x -= 1
-    elsif @position.absolute_y > 0
+    when .< @position.absolute_y
       # if there is an upper line go to the end of it
       up
       if (size = @file.rows[@position.absolute_y].size) > @size.width
@@ -36,7 +37,7 @@ struct Cride::Editor::Move
         # scroll the page to the right
         @position.page_x += 1
       end
-    elsif @file.rows.size > @position.absolute_y + 1
+    elsif @position.absolute_y + 1 < @file.rows.size
       # else go to the next line if it exists
       @position.reset_x
       down
@@ -44,13 +45,14 @@ struct Cride::Editor::Move
   end
 
   def up
-    if @position.absolute_y == 0
+    case 0
+    when @position.absolute_y
       @position.reset_x
-    elsif @position.cursor_y > 0
+    when .< @position.cursor_y
       # move if there is an upper row
       @position.cursor_y -= 1
       adapt_end_line
-    elsif @position.page_y > 0
+    when .< @position.page_y
       # if the page was already scrolled
       @position.page_y -= 1
       adapt_end_line
@@ -107,15 +109,15 @@ struct Cride::Editor::Move
   end
 
   def page_down
-    rows_size = @file.rows.size - 1
-    if rows_size == @position.absolute_y
+    case (rows_size = @file.rows.size - 1)
+    when @position.absolute_y
       # at the end of the file
       @position.cursor_x = @file.rows[rows_size].size
-    elsif rows_size > @position.page_y + @size.height
+    when .> @position.page_y + @size.height
       # enough to scroll down
       @position.page_y += @size.height
       adapt_end_line
-    elsif rows_size > @size.height
+    when .> @size.height
       # the line number is greater than the height
       @position.page_y = rows_size - @size.height
       @position.cursor_y = @size.height
