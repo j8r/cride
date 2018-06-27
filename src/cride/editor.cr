@@ -16,6 +16,14 @@ struct Cride::Editor
     (@tab_spaces - 1) * line[0..@position.absolute_x].count('\t')
   end
 
+  def cursor_x_with_tabs : Int32
+    row = @file.rows[@position.absolute_y]
+    cursor_x = @position.cursor_x + tab_before_absolute_width row
+    # set the cursor at the begining of the tab if on it
+    cursor_x -= @tab_spaces - 1 if row[@position.cursor_x]? == '\t'
+    cursor_x
+  end
+
   def initialize(@file, @size)
     @move = Cride::Editor::Move.new @file, @position, @size
     @add = Cride::Editor::Add.new @file, @position, @move
