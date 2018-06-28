@@ -18,3 +18,15 @@ enum Cride::Terminal::Color::Attribute
   Underline
   Reverse
 end
+
+enum Cride::Terminal::Color::Select
+  Default
+  Black
+  Red
+  Green
+  Yellow
+  Blue
+  Magenta
+  Cyan
+  White
+end
