@@ -1,3 +1,4 @@
-.shards
-lib
-shard.lock
+/.shards
+/cride
+/lib
+/shard.lock

@@ -26,7 +26,7 @@ struct Cride::Terminal::Render
       width = @editor.size.width + 1 + @editor.tab_width row
       # Start to render at the page_x until the end of the terminal width
       if row[@editor.position.page_x]?
-        row[@editor.position.page_x..@editor.position.page_x + width].each do |char|
+        row[@editor.position.page_x..@editor.position.page_x + width].each_char do |char|
           # highlight current line
           if char == '\t'
             @editor.tab_spaces.times do

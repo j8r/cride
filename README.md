@@ -8,6 +8,8 @@ A light Crystal IDE
 
 * Light, fast and easy to use
 * Customizable
+* Modular (different front-ends can share same resources)
+* Colors
 * Read from the stdin
 
 ## [CLI](https://github.com/j8r/clicr) usage
@@ -37,3 +39,4 @@ Build Cride:
 ## License
 
 Copyright (c) 2018 Julien Reichardt - ISC License
+

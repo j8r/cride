@@ -1,18 +1,16 @@
 class Cride::FileHandler
-  property rows = Array(Array(Char)).new
+  property rows = Array(String).new
   property saved
   property name
   getter add : Add
   getter delete : Delete
 
   def initialize(data = "", @name = "", @saved = false)
-    data.each_line do |line|
-      @rows << line.chars
-    end
+    @rows = data.lines
     if @rows.empty?
-      @rows << Array(Char).new
+      @rows << String.new
     elsif !@rows.last.empty?
-      @rows << Array(Char).new
+      @rows << String.new
     end
 
     @add = Add.new @rows, pointerof(@saved)
@@ -24,11 +22,10 @@ class Cride::FileHandler
     if !@name.empty?
       data = String.build do |str|
         @rows.each do |line|
-          str << '\n'
-          line.each { |char| str << char }
+          str << line << '\n'
         end
         # Remove the first \n
-      end.lchop
+      end
       File.write @name, data
       @saved = true
     end

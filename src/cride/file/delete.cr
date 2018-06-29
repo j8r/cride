@@ -1,12 +1,12 @@
 struct Cride::FileHandler::Delete
-  @rows : Array(Array(Char))
+  @rows : Array(String)
   @saved : Pointer(Bool)
 
   def initialize(@rows, @saved)
   end
 
   def char(x, y)
-    @rows[y].delete_at x
+    @rows[y] = @rows[y].sub(x, "")
     @saved.value = false
   end
 
@@ -23,7 +23,7 @@ struct Cride::FileHandler::Delete
   end
 
   def line(y)
-    @rows[y].clear
+    @rows[y] = ""
     @saved.value = false
   end
 end
