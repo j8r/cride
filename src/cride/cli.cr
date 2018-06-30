@@ -32,9 +32,9 @@ module Cride::CLI
         when .directory? file
           abort file + " can't be read because it is a directory"
         when .exists? file
-          new_terminal Cride::FileHandler.new(File.new(file), file, true)
+          new_terminal Cride::FileHandler.new(File.new file)
         else
-          new_terminal Cride::FileHandler.new("", file, false)
+          new_terminal Cride::FileHandler.new(name: file)
         end
       end
     end

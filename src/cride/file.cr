@@ -5,28 +5,35 @@ class Cride::FileHandler
   getter add : Add
   getter delete : Delete
 
-  def initialize(data : String | File = "", @name = "", @saved = false)
-    @rows = File.read_lines data.path if data.is_a? File
-    if @rows.empty?
-      @rows << String.new
-    elsif !@rows.last.empty?
-      @rows << String.new
-    end
+  def initialize(data = "", @name = "", @saved = false)
+    @rows = data.lines
+    create_empty_row
 
     @add = Add.new @rows, pointerof(@saved)
     @delete = Delete.new @rows, pointerof(@saved)
   end
 
+  def initialize(file : File, @saved = true)
+    @rows = File.read_lines file.path
+    @name = file.path
+    create_empty_row
+
+    @add = Add.new @rows, pointerof(@saved)
+    @delete = Delete.new @rows, pointerof(@saved)
+  end
+
+  private def create_empty_row
+    if @rows.empty?
+      @rows << ""
+    elsif !@rows.last.empty?
+      @rows << ""
+    end
+  end
+
   # Write the editor's data to a file
   def write
     if !@name.empty?
-      data = String.build do |str|
-        @rows.each do |line|
-          str << line << '\n'
-        end
-        # Remove the first \n
-      end
-      File.write @name, data
+      File.write @name, @rows.join('\n')
       @saved = true
     end
   end
