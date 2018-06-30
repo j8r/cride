@@ -5,8 +5,8 @@ class Cride::FileHandler
   getter add : Add
   getter delete : Delete
 
-  def initialize(data = "", @name = "", @saved = false)
-    @rows = data.lines
+  def initialize(data : String | File = "", @name = "", @saved = false)
+    @rows = File.read_lines data.path if data.is_a? File
     if @rows.empty?
       @rows << String.new
     elsif !@rows.last.empty?
