@@ -81,13 +81,14 @@ struct Cride::Editor::Move
   def adapt_end_line
     if @position.absolute_x > (line_size = @file.rows[@position.absolute_y].size)
       # the line if smaller than the one before
-      if line_size == 0
+      case line_size
+      when 0
         # If the line is empty
         @position.reset_x
-      elsif @position.page_x > (new_page_x = line_size - 1)
+      when .< @position.page_x
         # the page size of the former line is longer that the size of the current line - adapt it
-        @position.page_x = new_page_x
-        @position.cursor_x = line_size - new_page_x
+        @position.page_x = line_size
+        @position.cursor_x = 0
       else
         # only modify the cursor
         @position.cursor_x = line_size - @position.page_x
@@ -97,7 +98,7 @@ struct Cride::Editor::Move
 
   def page_up
     if @position.absolute_y == 0
-      @position.cursor_x = 0
+      @position.reset_x
     elsif @position.page_y > @size.height
       # enough to scroll up
       @position.page_y -= @size.height
@@ -112,13 +113,17 @@ struct Cride::Editor::Move
     case (rows_size = @file.rows.size - 1)
     when @position.absolute_y
       # at the end of the file
-      @position.cursor_x = @file.rows[rows_size].size
+      line_size = @file.rows[rows_size].size
+      if line_size > @size.width
+        @position.page_x = line_size - @size.width
+      end
+      @position.cursor_x = line_size
     when .> @position.page_y + @size.height
       # enough to scroll down
       @position.page_y += @size.height
       adapt_end_line
     when .> @size.height
-      # the line number is greater than the height
+      # the line number is greater than the editor's height
       @position.page_y = rows_size - @size.height
       @position.cursor_y = @size.height
       adapt_end_line

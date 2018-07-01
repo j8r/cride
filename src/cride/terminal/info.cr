@@ -41,7 +41,7 @@ struct Cride::Terminal::Info
 
   def render
     @height = TermboxBindings.tb_height - 1
-    render_string @editor.file.name, (@editor.file.saved ? @color.bg_info : @color.not_saved)
+    render_string @editor.file.name, (@editor.file.saved ? @color.bg_info : @color.unsaved)
     write 32
     line
 
