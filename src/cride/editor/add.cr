@@ -6,6 +6,11 @@ struct Cride::Editor::Add
   def initialize(@file, @position, @move)
   end
 
+  def set_char(char)
+    @file.add.set_char @position.absolute_x, @position.absolute_y, char
+    @move.right
+  end
+
   def char(char)
     @file.add.char @position.absolute_x, @position.absolute_y, char
     @move.right

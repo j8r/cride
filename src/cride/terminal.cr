@@ -20,8 +20,6 @@ struct Cride::Terminal
 
     # Use 256 color mode
     TermboxBindings.tb_select_output_mode Output::C_256.value
-
-    # Use red foreground, periwinkle background
     TermboxBindings.tb_set_clear_attributes @color.fg, @color.bg
 
     # Reset things
@@ -61,11 +59,14 @@ struct Cride::Terminal
         when Key::PGUP.value                              then @editor.move.page_up
         when Key::PGDN.value                              then @editor.move.page_down
         when Key::ENTER.value                             then @editor.add.line
-        when Key::TAB.value                               then @editor.add.char '\t'
-        when Key::SPACE.value                             then @editor.add.char ' '
+        when Key::TAB.value                               then @editor.insert ? @editor.add.set_char '\t' : @editor.add.char '\t'
+        when Key::SPACE.value                             then @editor.insert ? @editor.add.set_char ' ' : @editor.add.char ' '
+        when Key::INSERT.value                            then @editor.insert = !@editor.insert
         else
           char = ev.ch.unsafe_chr
-          @editor.add.char char if !char.ascii_control?
+          if !char.ascii_control?
+            @editor.insert ? @editor.add.set_char char : @editor.add.char char
+          end
         end
       end
     end

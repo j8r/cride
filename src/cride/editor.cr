@@ -1,10 +1,11 @@
-struct Cride::Editor
+class Cride::Editor
   getter position = Position.new
   getter file : Cride::FileHandler
   getter add : Add
   getter delete : Delete
   getter move : Move
   getter size : Size
+  property insert = false
   property tab_spaces = 4 # Must be at least 1
 
   def tab_width(line : String) : Int32

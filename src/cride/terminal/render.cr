@@ -6,19 +6,25 @@ struct Cride::Terminal::Render
   end
 
   private def render_cell(x, y, char)
-    bg = if y == @editor.position.cursor_y
-           # highlight the selected line
-           @color.line
-         else
-           @color.bg
-         end
-    TermboxBindings.tb_change_cell x, y, char, @color.fg, bg
+    if y == @editor.position.cursor_y
+      # highlight the selected line
+      if x == @editor.cursor_x_with_tabs
+        # cursor position
+        if @editor.insert
+          TermboxBindings.tb_change_cell x, y, char, (@editor.insert ? @color.fg | Cride::Terminal::Color::Attribute::Underline.value : @color.fg), @color.line
+        else
+          TermboxBindings.tb_change_cell x, y, char, @color.bg, @color.fg
+        end
+      else
+        TermboxBindings.tb_change_cell x, y, char, @color.fg, @color.line
+      end
+    else
+      TermboxBindings.tb_change_cell x, y, char, @color.fg, @color.bg
+    end
   end
 
   def editor
     TermboxBindings.tb_clear
-    # Render the cursor and info, and present them to Termbox
-    TermboxBindings.tb_set_cursor @editor.cursor_x_with_tabs, @editor.position.cursor_y
 
     # Render starting at the page_y line until the end of the terminal height
     @editor.file.rows[@editor.position.page_y..@editor.position.page_y + @editor.size.height].each_with_index do |row, y|

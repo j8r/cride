@@ -1,5 +1,6 @@
 module Cride
   struct Terminal
+    HIDE_CURSOR = -1
     enum Ctrl
       TILDE       = 0
       CTRL_2      = 0
@@ -95,9 +96,9 @@ module Cride
     end
 
     @[Flags]
-    enum Attributes
-      BOLD      = 256
-      UNDERLINE
+    enum Attribute
+      Bold      = 256
+      Underline
     end
 
     @[Flags]

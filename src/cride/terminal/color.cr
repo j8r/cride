@@ -10,23 +10,23 @@ struct Cride::Terminal::Color
     @unsaved : Int32 = 1
   )
   end
-end
 
-@[Flags]
-enum Cride::Terminal::Color::Attribute
-  Bold      = 256
-  Underline
-  Reverse
-end
+  @[Flags]
+  enum Attribute
+    Bold      = 256
+    Underline
+    Reverse
+  end
 
-enum Cride::Terminal::Color::Select
-  Default
-  Black
-  Red
-  Green
-  Yellow
-  Blue
-  Magenta
-  Cyan
-  White
+  enum Select
+    Default
+    Black
+    Red
+    Green
+    Yellow
+    Blue
+    Magenta
+    Cyan
+    White
+  end
 end

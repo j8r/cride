@@ -5,6 +5,16 @@ struct Cride::FileHandler::Add
   def initialize(@rows, @saved)
   end
 
+  def set_char(x, y, char)
+    line = @rows[y]
+    @rows[y] = if line.size > x
+                 line.sub x, char
+               else
+                 line + char
+               end
+    @saved.value = false
+  end
+
   def char(x, y, char)
     @rows[y] = @rows[y].insert x, char
     @saved.value = false
