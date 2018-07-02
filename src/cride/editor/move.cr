@@ -116,8 +116,10 @@ struct Cride::Editor::Move
       line_size = @file.rows[rows_size].size
       if line_size > @size.width
         @position.page_x = line_size - @size.width
+        @position.cursor_x = @size.width
+      else
+        @position.cursor_x = line_size
       end
-      @position.cursor_x = line_size
     when .> @position.page_y + @size.height
       # enough to scroll down
       @position.page_y += @size.height
