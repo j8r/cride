@@ -1,7 +1,7 @@
 require "termbox"
 
 struct Cride::Terminal
-  @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
+  #  @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
   getter color : Color
   getter size : Cride::Size
 
@@ -16,7 +16,7 @@ struct Cride::Terminal
     end
 
     # Set input mode (ESC mode with mouse enabled)
-    TermboxBindings.tb_select_input_mode Input::Esc.value | Input::Mouse.value
+    TermboxBindings.tb_select_input_mode InputMode::Esc.value | InputMode::Mouse.value
 
     # Use 256 color mode
     TermboxBindings.tb_select_output_mode Output::C_256.value
@@ -40,33 +40,32 @@ struct Cride::Terminal
       @render.editor
       @info.render
       TermboxBindings.tb_present
-      ev = @event_master
-      TermboxBindings.tb_poll_event pointerof(ev)
+      # ev = @event_master
+      # TermboxBindings.tb_poll_event pointerof(ev)
       @size.width = TermboxBindings.tb_width - 1
       @size.height = TermboxBindings.tb_height - 2
-      if ev.type == Event::Key.value
-        case ev.key
-        when Ctrl::C.value, Ctrl::Q.value, Key::ESC.value then break
-        when Ctrl::S.value                                then @editor.file.write
-        when Ctrl::D.value                                then @editor.add.duplicate_line
-        when Ctrl::K.value                                then @editor.delete.line
-        when Ctrl::H.value, Key::BACKSPACE2.value         then @editor.delete.back
-        when Key::DELETE.value                            then @editor.delete.forward
-        when Key::ARROW_LEFT.value                        then @editor.move.left
-        when Key::ARROW_RIGHT.value                       then @editor.move.right
-        when Key::ARROW_UP.value                          then @editor.move.up
-        when Key::ARROW_DOWN.value                        then @editor.move.down
-        when Key::PGUP.value                              then @editor.move.page_up
-        when Key::PGDN.value                              then @editor.move.page_down
-        when Key::ENTER.value                             then @editor.add.line
-        when Key::TAB.value                               then @editor.insert ? @editor.add.set_char '\t' : @editor.add.char '\t'
-        when Key::SPACE.value                             then @editor.insert ? @editor.add.set_char ' ' : @editor.add.char ' '
-        when Key::INSERT.value                            then @editor.insert = !@editor.insert
-        else
-          char = ev.ch.unsafe_chr
-          if !char.ascii_control?
-            @editor.insert ? @editor.add.set_char char : @editor.add.char char
-          end
+      input = Input.new
+      case input.type
+      when Key::Ctrl_C, Key::Ctrl_Q, Key::Esc then break
+      when Key::Ctrl_S                        then @editor.file.write
+      when Key::Ctrl_D                        then @editor.add.duplicate_line
+      when Key::Ctrl_K                        then @editor.delete.line
+      when Key::Ctrl_H, Key::Backspace        then @editor.delete.back
+      when Key::Delete                        then @editor.delete.forward
+      when Key::ArrowUp                       then @editor.move.up
+      when Key::ArrowDown                     then @editor.move.down
+      when Key::ArrowRight                    then @editor.move.right
+      when Key::ArrowLeft                     then @editor.move.left
+      when Key::PageUp                        then @editor.move.page_up
+      when Key::PageDown                      then @editor.move.page_down
+      when Key::Enter                         then @editor.add.line
+      when Key::Tab                           then @editor.insert ? @editor.add.set_char '\t' : @editor.add.char '\t'
+      when Key::Space                         then @editor.insert ? @editor.add.set_char ' ' : @editor.add.char ' '
+      when Key::Insert                        then @editor.insert = !@editor.insert
+      else
+        char = input.to_char
+        if !char.ascii_control?
+          @editor.insert ? @editor.add.set_char char : @editor.add.char char
         end
       end
     end

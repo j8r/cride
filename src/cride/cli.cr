@@ -24,6 +24,7 @@ module Cride::CLI
     STDIN.read_timeout = 0
     new_terminal Cride::FileHandler.new STDIN.gets_to_end
   rescue ex : IO::Timeout
+    STDIN.read_timeout = nil
     if files.empty?
       new_terminal Cride::FileHandler.new
     else
