@@ -2,29 +2,40 @@ module Cride
   struct Terminal
     struct Input
       getter slice = Bytes.new 6
+      getter to_s : String
 
       def initialize
         STDIN.raw &.read @slice
+        @to_s = String.new slice
       end
 
       def to_char
-        to_s[0]
-      end
-
-      def to_s
-        String.new slice
+        @to_s[0]
       end
 
       def type
-        if slice[1] != 0_u8 || slice[0] < 33 || slice[0] == 127
+        if control?
           Key.new slice.sum.to_i
+        else
+          Key.new -1
         end
+      end
+
+      def control?
+        @to_s.each_char do |char|
+          case char
+          when '\u{0}'   then return false
+          when .control? then return true
+          end
+        end
+        false
       end
     end
 
     enum Key
-      Tilde            = 0
-      Ctrl_2           = 0
+      Char             = -1
+      Tilde            =  0
+      Ctrl_2           =  0
       Ctrl_A
       Ctrl_B
       Ctrl_C
@@ -65,8 +76,13 @@ module Cride
       Ctrl_7
       Ctrl_Slash       = 31
       Ctrl_Underscore  = 31
-      Space            = 32
-      Insert           = 38
+      Space
+      Exclamation
+      QuotationMarks
+      Hash
+      Dollar
+      Percent
+      Insert
       Delete
       Home
       PageUp

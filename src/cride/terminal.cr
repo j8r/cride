@@ -44,8 +44,7 @@ struct Cride::Terminal
       # TermboxBindings.tb_poll_event pointerof(ev)
       @size.width = TermboxBindings.tb_width - 1
       @size.height = TermboxBindings.tb_height - 2
-      input = Input.new
-      case input.type
+      case (input = Input.new).type
       when Key::Ctrl_C, Key::Ctrl_Q, Key::Esc then break
       when Key::Ctrl_S                        then @editor.file.write
       when Key::Ctrl_D                        then @editor.add.duplicate_line
@@ -60,13 +59,10 @@ struct Cride::Terminal
       when Key::PageDown                      then @editor.move.page_down
       when Key::Enter                         then @editor.add.line
       when Key::Tab                           then @editor.insert ? @editor.add.set_char '\t' : @editor.add.char '\t'
-      when Key::Space                         then @editor.insert ? @editor.add.set_char ' ' : @editor.add.char ' '
       when Key::Insert                        then @editor.insert = !@editor.insert
-      else
+      when Key::Char
         char = input.to_char
-        if !char.ascii_control?
-          @editor.insert ? @editor.add.set_char char : @editor.add.char char
-        end
+        @editor.insert ? @editor.add.set_char char : @editor.add.char char
       end
     end
     # Essential to call shutdown to reset lower-level terminal flags
