@@ -50,19 +50,28 @@ struct Cride::Terminal
       when Key::Ctrl_D                        then @editor.add.duplicate_line
       when Key::Ctrl_K                        then @editor.delete.line
       when Key::Ctrl_H, Key::Backspace        then @editor.delete.back
-      when Key::Delete                        then @editor.delete.forward
+      when Key::Ctrl_ArrowUp                  then @editor.move.up
+      when Key::Ctrl_ArrowDown                then @editor.move.down
+      when Key::Ctrl_ArrowRight               then @editor.move.right
+      when Key::Ctrl_ArrowLeft                then @editor.move.left
       when Key::ArrowUp                       then @editor.move.up
       when Key::ArrowDown                     then @editor.move.down
       when Key::ArrowRight                    then @editor.move.right
       when Key::ArrowLeft                     then @editor.move.left
+      when Key::Delete                        then @editor.delete.forward
       when Key::PageUp                        then @editor.move.page_up
       when Key::PageDown                      then @editor.move.page_down
       when Key::Enter                         then @editor.add.line
-      when Key::Tab                           then @editor.insert ? @editor.add.set_char '\t' : @editor.add.char '\t'
       when Key::Insert                        then @editor.insert = !@editor.insert
-      when Key::Char
-        char = input.to_char
-        @editor.insert ? @editor.add.set_char char : @editor.add.char char
+      when Key::ValidString
+        input.to_s.each_char do |char|
+          case char
+          when '\r' then @editor.add.line
+          when '\t' then @editor.insert ? @editor.add.set_char '\t' : @editor.add.char '\t'
+          else
+            @editor.insert ? @editor.add.set_char char : @editor.add.char char
+          end
+        end
       end
     end
     # Essential to call shutdown to reset lower-level terminal flags

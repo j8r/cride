@@ -6,11 +6,7 @@ module Cride
 
       def initialize
         STDIN.raw &.read @slice
-        @to_s = String.new slice
-      end
-
-      def to_char
-        @to_s[0]
+        @to_s = String.new(slice).rstrip '\u{0}'
       end
 
       def type
@@ -24,8 +20,8 @@ module Cride
       def control?
         @to_s.each_char do |char|
           case char
-          when '\u{0}'   then return false
-          when .control? then return true
+          when '\t', '\r' then false
+          when .control?  then return true
           end
         end
         false
@@ -33,7 +29,7 @@ module Cride
     end
 
     enum Key
-      Char             = -1
+      ValidString      = -1
       Tilde            =  0
       Ctrl_2           =  0
       Ctrl_A
@@ -47,10 +43,12 @@ module Cride
       Ctrl_H           = 8
       Tab
       Ctrl_I           = 9
-      Ctrl_J
+      LineField
+      Ctrl_J           = 10
       Ctrl_K
       Ctrl_L
       Enter
+      CarriageReturn   = 13
       Ctrl_M           = 13
       Ctrl_N
       Ctrl_O
