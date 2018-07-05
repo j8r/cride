@@ -1,30 +1,32 @@
 module Cride
   struct Terminal
     struct Input
-      getter slice = Bytes.new 6
-      getter to_s : String
+      getter slice = Bytes.new 4096
+      class_getter file = File.open "/dev/tty"
 
       def initialize
-        STDIN.raw &.read @slice
-        @to_s = String.new(slice).rstrip '\u{0}'
+        @@file.raw &.read slice
+      rescue
+        @@file.close
+        @@file = File.open "/dev/tty"
+        initialize
       end
 
       def type
-        if control?
-          Key.new slice.sum.to_i
-        else
-          Key.new -1
-        end
+        Key.new control? ? slice.sum.to_i : -1
+      end
+
+      def to_s
+        String.new(slice).rstrip '\u{0}'
       end
 
       def control?
-        @to_s.each_char do |char|
-          case char
-          when '\t', '\r' then false
-          when .control?  then return true
-          end
+        case slice[0].unsafe_chr
+        when '\t', '\r' then false
+        when .control?  then true
+        else
+          false
         end
-        false
       end
     end
 

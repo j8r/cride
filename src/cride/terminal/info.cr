@@ -1,10 +1,11 @@
 struct Cride::Terminal::Info
-  @height = 0
   @width = 0
+  @height : Int32
   @editor : Cride::Editor
   @color : Color
 
   def initialize(@editor, @color)
+    @height = @editor.size.height + 1
   end
 
   private def write(char, fg = @color.fg_info)
@@ -40,13 +41,13 @@ struct Cride::Terminal::Info
   end
 
   def render
-    @height = TermboxBindings.tb_height - 1
     render_string @editor.file.name, (@editor.file.saved ? @color.bg_info : @color.unsaved)
     write 32
     line
 
     # Render remaining empty characters
-    while @width < TermboxBindings.tb_width
+    editor_width = @editor.size.width + 1
+    while @width < editor_width
       write 32
     end
     @width = 0

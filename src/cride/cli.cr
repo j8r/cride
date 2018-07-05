@@ -21,11 +21,10 @@ module Cride::CLI
   end
 
   private def open_files(files)
-    STDIN.read_timeout = 0
-    new_terminal Cride::FileHandler.new STDIN.gets_to_end
-  rescue ex : IO::Timeout
-    STDIN.read_timeout = nil
-    if files.empty?
+    if !STDIN.tty?
+      STDIN.read_timeout = 0
+      new_terminal Cride::FileHandler.new STDIN.gets_to_end
+    elsif files.empty?
       new_terminal Cride::FileHandler.new
     else
       files.each do |file|

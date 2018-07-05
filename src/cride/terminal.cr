@@ -50,10 +50,10 @@ struct Cride::Terminal
       when Key::Ctrl_D                        then @editor.add.duplicate_line
       when Key::Ctrl_K                        then @editor.delete.line
       when Key::Ctrl_H, Key::Backspace        then @editor.delete.back
-      when Key::Ctrl_ArrowUp                  then @editor.move.up
-      when Key::Ctrl_ArrowDown                then @editor.move.down
-      when Key::Ctrl_ArrowRight               then @editor.move.right
-      when Key::Ctrl_ArrowLeft                then @editor.move.left
+      when Key::Ctrl_ArrowUp                  then @editor.move.page_up
+      when Key::Ctrl_ArrowDown                then @editor.move.page_down
+      when Key::Ctrl_ArrowRight               then @editor.move.end_of_line
+      when Key::Ctrl_ArrowLeft                then @editor.position.reset_x
       when Key::ArrowUp                       then @editor.move.up
       when Key::ArrowDown                     then @editor.move.down
       when Key::ArrowRight                    then @editor.move.right
@@ -65,15 +65,17 @@ struct Cride::Terminal
       when Key::Insert                        then @editor.insert = !@editor.insert
       when Key::ValidString
         input.to_s.each_char do |char|
-          case char
-          when '\r' then @editor.add.line
-          when '\t' then @editor.insert ? @editor.add.set_char '\t' : @editor.add.char '\t'
+          if char == '\r'
+            @editor.add.line
+          elsif @editor.insert
+            @editor.add.set_char char
           else
-            @editor.insert ? @editor.add.set_char char : @editor.add.char char
+            @editor.add.char char
           end
         end
       end
     end
+    Input.file.close
     # Essential to call shutdown to reset lower-level terminal flags
     TermboxBindings.tb_shutdown
   rescue ex

@@ -112,27 +112,30 @@ struct Cride::Editor::Move
   def page_down
     case (rows_size = @file.rows.size - 1)
     when @position.absolute_y
-      # at the end of the file
-      line_size = @file.rows[rows_size].size
-      if line_size > @size.width
-        @position.page_x = line_size - @size.width
-        @position.cursor_x = @size.width
-      else
-        @position.cursor_x = line_size
-      end
+      end_of_line
     when .> @position.page_y + @size.height
       # enough to scroll down
       @position.page_y += @size.height
       adapt_end_line
     when .> @size.height
-      # the line number is greater than the editor's height
+      # near the end of file
       @position.page_y = rows_size - @size.height
       @position.cursor_y = @size.height
       adapt_end_line
     else
-      # the line number is smaller than the height
+      # at the end of file - only move the cursor
       @position.cursor_y = rows_size
       adapt_end_line
+    end
+  end
+
+  def end_of_line
+    line_size = @file.rows[@position.absolute_y].size
+    if line_size > @size.width
+      @position.page_x = line_size - @size.width
+      @position.cursor_x = @size.width
+    else
+      @position.cursor_x = line_size
     end
   end
 end
