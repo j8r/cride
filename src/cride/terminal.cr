@@ -4,17 +4,28 @@ struct Cride::Terminal
   #  @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
   getter color : Color
   getter size : Cride::Size
+  class_getter file = File.open "/dev/tty"
+
+  lib C
+    fun ioctl(fd : LibC::Int, request : LibC::SizeT, winsize : LibC::Winsize*) : LibC::Int
+  end
+
+  def wait_input
+    Input.new
+  rescue
+    @render.editor
+    @info.render
+    TermboxBindings.tb_present
+    C.ioctl(0, LibC::TIOCGWINSZ, out screen_size)
+    @size.width = screen_size.ws_col.to_i - 1
+    @size.height = screen_size.ws_row.to_i - 2
+    STDOUT.flush
+    @@file.close
+    @@file = File.open "/dev/tty"
+    wait_input
+  end
 
   def initialize(file : Cride::FileHandler, @color = Color.new)
-    case TermboxBindings.tb_init
-    # E_UNSUPPORTED_TERMINAL
-    when -1 then raise "Terminal unsupported."
-      # E_FAILED_TO_OPEN_TTY
-    when -2 then raise "Failed to open terminal."
-      # E_PIPE_TRAP_ERROR
-    when -3 then raise "Pipe trap error."
-    end
-
     # Set input mode (ESC mode with mouse enabled)
     TermboxBindings.tb_select_input_mode InputMode::Esc.value | InputMode::Mouse.value
 
@@ -26,7 +37,9 @@ struct Cride::Terminal
     TermboxBindings.tb_clear
 
     # Create instance variables
-    @size = Cride::Size.new TermboxBindings.tb_width - 1, TermboxBindings.tb_height - 2
+    C.ioctl(0, LibC::TIOCGWINSZ, out screen_size)
+    @size = Cride::Size.new screen_size.ws_col.to_i - 1, screen_size.ws_row.to_i - 2
+
     @editor = Cride::Editor.new file, @size
     @render = Render.new @editor, @color
     @info = Info.new @editor, @color
@@ -40,11 +53,7 @@ struct Cride::Terminal
       @render.editor
       @info.render
       TermboxBindings.tb_present
-      # ev = @event_master
-      # TermboxBindings.tb_poll_event pointerof(ev)
-      @size.width = TermboxBindings.tb_width - 1
-      @size.height = TermboxBindings.tb_height - 2
-      case (input = Input.new).type
+      case (input = wait_input).type
       when Key::Ctrl_C, Key::Ctrl_Q, Key::Esc then break
       when Key::Ctrl_S                        then @editor.file.write
       when Key::Ctrl_D                        then @editor.add.duplicate_line
@@ -75,7 +84,7 @@ struct Cride::Terminal
         end
       end
     end
-    Input.file.close
+    @@file.close
     # Essential to call shutdown to reset lower-level terminal flags
     TermboxBindings.tb_shutdown
   rescue ex

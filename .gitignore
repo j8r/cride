@@ -1,4 +1,5 @@
 /.shards
 /cride
 /lib
+/src/libc
 /shard.lock

@@ -5,11 +5,7 @@ module Cride
       class_getter file = File.open "/dev/tty"
 
       def initialize
-        @@file.raw &.read slice
-      rescue
-        @@file.close
-        @@file = File.open "/dev/tty"
-        initialize
+        Cride::Terminal.file.raw &.read slice
       end
 
       def type

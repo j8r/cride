@@ -32,6 +32,10 @@ Install project dependencies
 
 `shards install`
 
+Generate bindings:
+
+`./gen-bindings.sh`
+
 Build Cride:
 
 `crystal build src/cride`
