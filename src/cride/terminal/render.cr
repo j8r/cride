@@ -26,6 +26,8 @@ struct Cride::Terminal::Render
   def editor
     # Render starting at the page_y line until the end of the terminal height
     String.build do |str|
+      # Set the cursor at home (on the top left)
+      str << "\033[H"
       y = 0
       @editor.file.rows[@editor.position.page_y..@editor.position.page_y + @editor.size.height].each do |row|
         x = 0

@@ -1,5 +1,3 @@
-require "termbox"
-
 struct Cride::Terminal
   #  @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
   getter color : Color
@@ -25,7 +23,7 @@ struct Cride::Terminal
     @render = Render.new @editor, @color
 
     # Save cursor, hide the cursor, use alternate screen buffer
-    print "\033[s" + "\033[?25l" + "\033[?1049h"
+    print "\033[s" + "\033[?1049h" + "\033[?25l"
     main_loop
   end
 
@@ -79,8 +77,9 @@ struct Cride::Terminal
     #{ex.backtrace.join('\n')}
     ERR
   ensure
+    @@file.flush
+    @@file.close
     # Clean screen, use normal screen buffer, restore the cursor, show the cursor
     print "\033[2J" + "\033[?1049l" + "\033[u" + "\033[?25h"
-    @@file.close
   end
 end
