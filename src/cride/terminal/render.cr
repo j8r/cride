@@ -6,7 +6,7 @@ struct Cride::Terminal::Render
   end
 
   private def cell_color(x, y) : String
-    @color.reset + if y == @editor.position.cursor_y
+    if y == @editor.position.cursor_y
       # highlight the selected line
       if x == @editor.cursor_x_with_tabs
         # cursor position
@@ -81,15 +81,6 @@ struct Cride::Terminal::Render
       + @color.fg_info \
       + position \
       + fill_line (@editor.file.name + position).size
-  end
-
-  def clear(height)
-    String.build do |str|
-      height.times do
-        str << "\033[A\033[2K"
-      end
-      str << @color.reset << '\r'
-    end
   end
 
   # Fill remainig cells with spaces

@@ -20,21 +20,19 @@ struct Cride::Terminal
 
   def initialize(file : Cride::FileHandler, @color = Color.new)
     # Create instance variables
-    C.ioctl(0, LibC::TIOCGWINSZ, out screen_size)
-    @size = Cride::Size.new screen_size.ws_col.to_i - 1, screen_size.ws_row.to_i - 2
-
+    @size = Cride::Size.new
     @editor = Cride::Editor.new file, @size
     @render = Render.new @editor, @color
 
-    # Hide cursor and save cursor
-    print "\u001B[?25l"
+    # Save cursor, hide the cursor, use alternate screen buffer
+    print "\033[s" + "\033[?25l" + "\033[?1049h"
     main_loop
   end
 
   # The main editor loop
   def main_loop
     loop do
-      C.ioctl(0, LibC::TIOCGWINSZ, out screen_size)
+      C.ioctl(1, LibC::TIOCGWINSZ, out screen_size)
       @size.width = screen_size.ws_col.to_i - 1
       @size.height = screen_size.ws_row.to_i - 2
       print @render.editor
@@ -68,7 +66,6 @@ struct Cride::Terminal
           end
         end
       end
-      print @render.clear @size.height + 1
     end
     # Essential to call shutdown to reset lower-level terminal flags
   rescue ex
@@ -82,9 +79,8 @@ struct Cride::Terminal
     #{ex.backtrace.join('\n')}
     ERR
   ensure
-    # Clear the editor terminal and show the cursor
-    print "\u001B[?25h" + @render.clear @size.height + 1
-
+    # Clean screen, use normal screen buffer, restore the cursor, show the cursor
+    print "\033[2J" + "\033[?1049l" + "\033[u" + "\033[?25h"
     @@file.close
   end
 end
