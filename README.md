@@ -14,19 +14,13 @@ A light Crystal IDE
 
 ## [CLI](https://github.com/j8r/clicr) usage
 
-For now build Cride (see the **Development** section below):
-
-`crystal build src/cride.cr`
+You have to build Cride (see the **Development** section below).
 
 Open a file:
 
 `./cride README.md`
 
 ## Development
-
-First you need to have [Termbox installed](https://github.com/nsf/termbox#installation).
-
-`sudo sh install-termbox.sh`
 
 Install project dependencies
 

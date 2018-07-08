@@ -66,7 +66,7 @@ struct Cride::Editor::Move
       @position.cursor_x = @file.rows[rows_size].size
     when -1
       # move if there is a row bellow
-      if @position.cursor_y > @size.height - 1
+      if @position.cursor_y >= @size.height
         # scroll the page down if the height limit it reached
         @position.page_y += 1
         adapt_end_line

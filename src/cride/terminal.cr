@@ -13,46 +13,31 @@ struct Cride::Terminal
   def wait_input
     Input.new
   rescue
-    @render.editor
-    @info.render
-    TermboxBindings.tb_present
-    C.ioctl(0, LibC::TIOCGWINSZ, out screen_size)
-    @size.width = screen_size.ws_col.to_i - 1
-    @size.height = screen_size.ws_row.to_i - 2
-    STDOUT.flush
     @@file.close
     @@file = File.open "/dev/tty"
     wait_input
   end
 
   def initialize(file : Cride::FileHandler, @color = Color.new)
-    # Set input mode (ESC mode with mouse enabled)
-    TermboxBindings.tb_select_input_mode InputMode::Esc.value | InputMode::Mouse.value
-
-    # Use 256 color mode
-    TermboxBindings.tb_select_output_mode Output::C_256.value
-    TermboxBindings.tb_set_clear_attributes @color.fg, @color.bg
-
-    # Reset things
-    TermboxBindings.tb_clear
-
     # Create instance variables
     C.ioctl(0, LibC::TIOCGWINSZ, out screen_size)
     @size = Cride::Size.new screen_size.ws_col.to_i - 1, screen_size.ws_row.to_i - 2
 
     @editor = Cride::Editor.new file, @size
     @render = Render.new @editor, @color
-    @info = Info.new @editor, @color
 
+    # Hide cursor and save cursor
+    print "\u001B[?25l"
     main_loop
   end
 
   # The main editor loop
   def main_loop
     loop do
-      @render.editor
-      @info.render
-      TermboxBindings.tb_present
+      C.ioctl(0, LibC::TIOCGWINSZ, out screen_size)
+      @size.width = screen_size.ws_col.to_i - 1
+      @size.height = screen_size.ws_row.to_i - 2
+      print @render.editor
       case (input = wait_input).type
       when Key::Ctrl_C, Key::Ctrl_Q, Key::Esc then break
       when Key::Ctrl_S                        then @editor.file.write
@@ -83,12 +68,10 @@ struct Cride::Terminal
           end
         end
       end
+      print @render.clear @size.height + 1
     end
-    @@file.close
     # Essential to call shutdown to reset lower-level terminal flags
-    TermboxBindings.tb_shutdown
   rescue ex
-    TermboxBindings.tb_shutdown
     puts <<-ERR
     An error as occured. Please create an issue at https://github.com/j8r/cride with the steps to how reproduce this bug.
     
@@ -98,5 +81,10 @@ struct Cride::Terminal
     Backtrace:
     #{ex.backtrace.join('\n')}
     ERR
+  ensure
+    # Clear the editor terminal and show the cursor
+    print "\u001B[?25h" + @render.clear @size.height + 1
+
+    @@file.close
   end
 end

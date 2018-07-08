@@ -9,7 +9,7 @@ description: A light Crystal IDE
 dependencies:
   clicr:
     github: j8r/clicr
-  termbox:
-    github: andrewsuzuki/termbox-crystal
+  autobind:
+    github: j8r/crystal-autobind
 
 license: ISC

@@ -2,7 +2,6 @@ module Cride
   struct Terminal
     struct Input
       getter slice = Bytes.new 4096
-      class_getter file = File.open "/dev/tty"
 
       def initialize
         Cride::Terminal.file.raw &.read slice
@@ -96,7 +95,7 @@ module Cride
       F8
       Backspace        = 127
       Ctrl_8           = 127
-      ArrowUp          = 171
+      ArrowUp          = 183
       ArrowDown
       ArrowRight
       ArrowLeft
@@ -115,12 +114,6 @@ module Cride
       C_256
       C_216
       Grayscale
-    end
-
-    @[Flags]
-    enum Attribute
-      Bold      = 256
-      Underline
     end
 
     @[Flags]
