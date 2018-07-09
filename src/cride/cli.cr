@@ -20,6 +20,7 @@ module Cride::CLI
     Cride::Terminal.new file: file, color: Cride::Terminal::Color.new(
       fg: 7,
       bg: 234,
+      bg_info: 0,
       bg_line: 236
     )
   end

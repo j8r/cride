@@ -8,7 +8,11 @@ module Cride
       end
 
       def type
-        Key.new control? ? slice.sum.to_i : -1
+        Key.new(if control?
+          (slice[0] + slice[1] + slice[2] + slice[3] + slice[4] + slice[5]).to_i
+        else
+          -1
+        end)
       end
 
       def to_s

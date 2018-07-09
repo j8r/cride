@@ -77,10 +77,12 @@ struct Cride::Terminal::Render
       str << row.size + 1 + @editor.tab_width row
     end
     # Return a colored info line
-    @color.bg_info \
-      + (@editor.file.saved ? @color.bg_info : @color.unsaved) \
-      + @editor.file.name \
-      + @color.fg_info \
+    if @editor.file.saved
+      @color.bg_info + @color.fg_info
+    else
+      @color.bg_unsaved + @color.fg_unsaved
+    end + @editor.file.name \
+      + @color.bg_info + @color.fg_info \
       + position \
       + fill_line (@editor.file.name + position).size
   end
