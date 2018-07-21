@@ -10,7 +10,7 @@ struct Cride::Terminal
     @editor = Cride::Editor.new file, @size
     @render = Render.new @editor, @color
 
-    # Save cursor, hide the cursor, use alternate screen buffer
+    # Save cursor, use alternate screen buffer, hide the cursor
     print "\033[s" + "\033[?1049h" + "\033[?25l"
     main_loop
   end
@@ -79,7 +79,7 @@ struct Cride::Terminal
   ensure
     @@file.flush
     @@file.close
-    # Clean screen, use normal screen buffer, restore the cursor, show the cursor
-    print "\033[2J" + "\033[?1049l" + "\033[u" + "\033[?25h"
+    # Use normal screen buffer, restore the cursor, show the cursor
+    print "\033[?1049l" + "\033[u" + "\033[?25h"
   end
 end

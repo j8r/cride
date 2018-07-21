@@ -17,13 +17,7 @@ struct Cride::Editor::Move
     when .< @position.absolute_y
       # if there is an upper line go to the end of it
       up
-      if (size = @file.rows[@position.absolute_y].size) > @size.width
-        # the line is longer than the terminal width
-        @position.page_x = size - @size.width
-        @position.cursor_x = @size.width
-      else
-        @position.cursor_x = size
-      end
+      end_of_line
     end
   end
 
@@ -78,24 +72,6 @@ struct Cride::Editor::Move
     end
   end
 
-  def adapt_end_line
-    if @position.absolute_x > (line_size = @file.rows[@position.absolute_y].size)
-      # the line if smaller than the one before
-      case line_size
-      when 0
-        # If the line is empty
-        @position.reset_x
-      when .< @position.page_x
-        # the page size of the former line is longer that the size of the current line - adapt it
-        @position.page_x = line_size
-        @position.cursor_x = 0
-      else
-        # only modify the cursor
-        @position.cursor_x = line_size - @position.page_x
-      end
-    end
-  end
-
   def page_up
     if @position.absolute_y == 0
       @position.reset_x
@@ -126,6 +102,24 @@ struct Cride::Editor::Move
       # at the end of file - only move the cursor
       @position.cursor_y = rows_size
       adapt_end_line
+    end
+  end
+
+  def adapt_end_line
+    if @position.absolute_x > (line_size = @file.rows[@position.absolute_y].size)
+      # the line if smaller than the one before
+      case line_size
+      when 0
+        # If the line is empty
+        @position.reset_x
+      when .< @position.page_x
+        # the page size of the former line is longer that the size of the current line - adapt it
+        @position.page_x = line_size
+        @position.cursor_x = 0
+      else
+        # only modify the cursor
+        @position.cursor_x = line_size - @position.page_x
+      end
     end
   end
 

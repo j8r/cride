@@ -21,12 +21,10 @@ struct Cride::FileHandler::Add
   end
 
   def line(x, y)
-    old = @rows[y]
-    old_size = old.size
+    old_row = @rows[y]
 
     # Remove the character after the cursor
-    new_row = old[x..-1]
-    @rows[y] = old[0...x]
+    @rows[y], new_row = old_row[0...x], old_row[x..-1]
 
     # Append to the new array
     @rows.insert y + 1, new_row
