@@ -4,6 +4,17 @@ struct Cride::Terminal
   getter size : Cride::Size
   class_getter file = File.open "/dev/tty"
 
+  def initialize(file : Cride::FileHandler, @color = Color.new)
+    # Create instance variables
+    @size = Cride::Size.new
+    @editor = Cride::Editor.new file, @size
+    @render = Render.new @editor, @color
+
+    # Save cursor, hide the cursor, use alternate screen buffer
+    print "\033[s" + "\033[?1049h" + "\033[?25l"
+    main_loop
+  end
+
   lib C
     fun ioctl(fd : LibC::Int, request : LibC::SizeT, winsize : LibC::Winsize*) : LibC::Int
   end
@@ -14,17 +25,6 @@ struct Cride::Terminal
     @@file.close
     @@file = File.open "/dev/tty"
     wait_input
-  end
-
-  def initialize(file : Cride::FileHandler, @color = Color.new)
-    # Create instance variables
-    @size = Cride::Size.new
-    @editor = Cride::Editor.new file, @size
-    @render = Render.new @editor, @color
-
-    # Save cursor, hide the cursor, use alternate screen buffer
-    print "\033[s" + "\033[?1049h" + "\033[?25l"
-    main_loop
   end
 
   # The main editor loop
@@ -38,7 +38,7 @@ struct Cride::Terminal
       when Key::Ctrl_C, Key::Ctrl_Q, Key::Esc then break
       when Key::Ctrl_S                        then @editor.file.write
       when Key::Ctrl_D                        then @editor.add.duplicate_line
-      when Key::Ctrl_K                        then @editor.delete.line
+      when Key::Ctrl_K                        then @editor.file.rows[@editor.position.absolute_y].empty? ? @editor.delete.line : @editor.delete.clear_line
       when Key::Ctrl_H, Key::Backspace        then @editor.delete.back
       when Key::Ctrl_ArrowUp                  then @editor.move.page_up
       when Key::Ctrl_ArrowDown                then @editor.move.page_down

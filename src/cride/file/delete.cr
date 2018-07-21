@@ -22,8 +22,13 @@ struct Cride::FileHandler::Delete
     @saved.value = false
   end
 
-  def line(y)
+  def clear_line(y)
     @rows[y] = ""
+    @saved.value = false
+  end
+
+  def line(y)
+    @rows.delete_at y
     @saved.value = false
   end
 end

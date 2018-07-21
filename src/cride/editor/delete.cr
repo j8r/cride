@@ -20,21 +20,28 @@ struct Cride::Editor::Delete
   end
 
   def forward
-    if @position.absolute_x < @file.rows[@position.absolute_y].size
+    current_row_size = @file.rows[@position.absolute_y].size
+
+    if @position.absolute_x < current_row_size
       # if there are still characters one the line
       @file.delete.char @position.absolute_x, @position.absolute_y
     elsif @position.absolute_y + 1 < @file.rows.size
-      # delete the next line and append it to the current one
-      size = @file.rows[@position.absolute_y].size
-
       # no chars left on the line but still lines next
       @file.delete.next_line_append_current @position.absolute_y
-      @position.cursor_x = size
+      @position.cursor_x = current_row_size
     end
   end
 
-  def line
-    @file.delete.line @position.absolute_y
+  def clear_line
+    @file.delete.clear_line @position.absolute_y
     @position.reset_x
+  end
+
+  def line
+    size = @file.rows.size
+    if size > 1
+      @file.delete.line @position.absolute_y
+      @move.up if size == @position.absolute_y + 1
+    end
   end
 end
