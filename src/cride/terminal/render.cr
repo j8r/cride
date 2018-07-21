@@ -5,21 +5,21 @@ struct Cride::Terminal::Render
   def initialize(@editor, @color)
   end
 
-  private def cell_color(x, y) : String
+  private def cell_color(io, x, y)
     if y == @editor.position.cursor_y
       # highlight the selected line
       if x == @editor.cursor_x_with_tabs
         # cursor position
         if @editor.insert
-          @color.ansi_foreground(@color.bg_cursor_num, Color::Mode::Underline) + @color.bg_line
+          io << @color.ansi_foreground(@color.bg_cursor_num, Color::Mode::Underline) << @color.bg_line
         else
-          @color.fg_cursor + @color.bg_cursor
+          io << @color.fg_cursor << @color.bg_cursor
         end
       else
-        @color.fg_line + @color.bg_line
+        io << @color.fg_line << @color.bg_line
       end
     else
-      @color.fg + @color.bg
+      io << @color.fg << @color.bg
     end
   end
 
@@ -38,25 +38,32 @@ struct Cride::Terminal::Render
             # highlight current line
             if char == '\t'
               @editor.tab_spaces.times do
-                str << cell_color(x, y) << ' '
+                cell_color str, x, y
+                str << ' '
                 x += 1
               end
             else
-              str << cell_color(x, y) << char
+              cell_color str, x, y
+              str << char
               x += 1
             end
           end
         end
         if x == @editor.cursor_x_with_tabs && y == @editor.position.cursor_y
-          str << cell_color(x, y) << ' '
+          cell_color str, x, y
+          str << ' '
           x += 1
         end
-        str << cell_color(x, y) << fill_line x
+        cell_color str, x, y
+        fill_line str, x
+        str << '\n'
         y += 1
       end
       # Fill remaining empty rows
       (@editor.size.height + 1 - y).times do
-        str << @color.fg + @color.bg << fill_line 0
+        str << @color.fg + @color.bg
+        fill_line str, 0
+        str << '\n'
       end
 
       # Add the lower info line
@@ -77,22 +84,23 @@ struct Cride::Terminal::Render
       str << row.size + 1 + @editor.tab_width row
     end
     # Return a colored info line
-    if @editor.file.saved
-      @color.bg_info + @color.fg_info
-    else
-      @color.bg_unsaved + @color.fg_unsaved
-    end + @editor.file.name \
-      + @color.bg_info + @color.fg_info \
-      + position \
-      + fill_line (@editor.file.name + position).size
+    String.build do |str|
+      if @editor.file.saved
+        str << @color.bg_info << @color.fg_info
+      else
+        str << @color.bg_unsaved << @color.fg_unsaved
+      end
+      str << @editor.file.name
+      str << @color.bg_info << @color.fg_info
+      str << position
+      fill_line str, (@editor.file.name + position).size
+    end
   end
 
   # Fill remainig cells with spaces
-  def fill_line(line_size)
-    String.build do |str|
-      (@editor.size.width + 1 - line_size).times do
-        str << ' '
-      end
+  def fill_line(io, line_size)
+    (@editor.size.width + 1 - line_size).times do
+      io << ' '
     end
   end
 end
