@@ -24,7 +24,7 @@ struct Cride::Editor::Add
   end
 
   def duplicate_line
-    @file.add.duplicate_line @position.absolute_x, @position.absolute_y
+    @file.add.duplicate_line @position.absolute_y
     @move.down
   end
 end

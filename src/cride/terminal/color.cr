@@ -6,11 +6,11 @@ struct Cride::Terminal::Color
     fg_info : String,
     bg_info : String,
     fg_cursor : String,
-    bg_cursor_num : Int32,
     bg_cursor : String,
     fg_unsaved : String,
-    bg_unsaved : String
-  getter reset = "\33[0m"
+    bg_unsaved : String,
+    bg_cursor_num : Int32,
+    reset = "\33[0m"
 
   def initialize(
     fg : Int32 = 15,
@@ -32,9 +32,9 @@ struct Cride::Terminal::Color
     @bg_info = ansi_background bg_info
     @fg_cursor = ansi_foreground fg_cursor
     @bg_cursor = ansi_background bg_cursor
-    @bg_cursor_num = bg_cursor
     @fg_unsaved = ansi_foreground fg_unsaved
     @bg_unsaved = ansi_background bg_unsaved
+    @bg_cursor_num = bg_cursor
   end
 
   def ansi_foreground(color, mode = Mode::Normal)

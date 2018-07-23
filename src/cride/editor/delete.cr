@@ -15,7 +15,7 @@ struct Cride::Editor::Delete
     when .< @position.absolute_y
       # go to the previous line
       @move.left
-      @file.delete.line_append_previous @position.absolute_y
+      @file.delete.next_line_append_previous @position.absolute_y
     end
   end
 
@@ -27,7 +27,7 @@ struct Cride::Editor::Delete
       @file.delete.char @position.absolute_x, @position.absolute_y
     elsif @position.absolute_y + 1 < @file.rows.size
       # no chars left on the line but still lines next
-      @file.delete.next_line_append_current @position.absolute_y
+      @file.delete.next_line_append_previous @position.absolute_y
       @position.cursor_x = current_row_size
     end
   end

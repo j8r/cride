@@ -1,5 +1,5 @@
 class Cride::FileHandler
-  property rows = Array(String).new
+  property rows
   property saved
   property name
   getter add : Add
@@ -14,8 +14,8 @@ class Cride::FileHandler
   end
 
   def initialize(file : File, @saved = true)
-    @rows = File.read_lines file.path
     @name = file.path
+    @rows = File.read_lines @name
     create_empty_row
 
     @add = Add.new @rows, pointerof(@saved)
@@ -30,10 +30,17 @@ class Cride::FileHandler
     end
   end
 
+  def to_s : String
+    String.build do |str|
+      @rows.join '\n', str
+      str << '\n'
+    end
+  end
+
   # Write the editor's data to a file
   def write
     if !@name.empty?
-      File.write @name, @rows.join('\n')
+      File.write @name, to_s
       @saved = true
     end
   end

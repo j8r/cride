@@ -5,6 +5,11 @@ struct Cride::FileHandler::Add
   def initialize(@rows, @saved)
   end
 
+  def char(x, y, char)
+    @rows[y] = @rows[y].insert x, char
+    @saved.value = false
+  end
+
   def set_char(x, y, char)
     line = @rows[y]
     @rows[y] = if line.size > x
@@ -15,15 +20,10 @@ struct Cride::FileHandler::Add
     @saved.value = false
   end
 
-  def char(x, y, char)
-    @rows[y] = @rows[y].insert x, char
-    @saved.value = false
-  end
-
   def line(x, y)
     old_row = @rows[y]
 
-    # Remove the character after the cursor
+    # Split the line in two
     @rows[y], new_row = old_row[0...x], old_row[x..-1]
 
     # Append to the new array
@@ -31,7 +31,7 @@ struct Cride::FileHandler::Add
     @saved.value = false
   end
 
-  def duplicate_line(x, y)
+  def duplicate_line(y)
     @rows.insert y + 1, @rows[y].dup
     @saved.value = false
   end

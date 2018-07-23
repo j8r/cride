@@ -10,14 +10,8 @@ struct Cride::FileHandler::Delete
     @saved.value = false
   end
 
-  def line_append_previous(y)
-    # delete the line and append the remaing characters to the upper line
-    @rows[y] += @rows.delete_at y + 1
-    @saved.value = false
-  end
-
-  def next_line_append_current(y)
-    # delete the line and append the remaing characters to the upper line
+  def next_line_append_previous(y)
+    # delete the line and append the remaing characters to the previous
     @rows[y] += @rows.delete_at y + 1
     @saved.value = false
   end
