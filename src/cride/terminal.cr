@@ -8,7 +8,7 @@ struct Cride::Terminal
     # Create instance variables
     @size = Cride::Size.new
     @editor = Cride::Editor.new file, @size
-    @render = Render.new @editor, @color
+    @render = Render.new @editor, @color, STDOUT
 
     # Save cursor, use alternate screen buffer, hide the cursor
     print "\033[s" + "\033[?1049h" + "\033[?25l"
@@ -33,7 +33,7 @@ struct Cride::Terminal
       C.ioctl(1, LibC::TIOCGWINSZ, out screen_size)
       @size.width = screen_size.ws_col.to_i - 1
       @size.height = screen_size.ws_row.to_i - 2
-      print @render.editor
+      @render.editor
       case (input = wait_input).type
       when Key::Ctrl_C, Key::Ctrl_Q, Key::Esc then break
       when Key::Ctrl_S                        then @editor.file.write
