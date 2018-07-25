@@ -15,13 +15,13 @@ describe Cride::FileHandler do
     file.rows.should eq [""]
     file.name.should eq ""
     file.saved.should be_false
-    file.to_s.should eq "\n"
+    file.to_s.should eq ""
   end
 
-  it "parses two empty lines" do
+  it "parses an empty line" do
     data = "\n"
     temp = Cride::FileHandler.new(data: data)
-    temp.rows.should eq [""]
+    temp.rows.should eq ["", ""]
     temp.to_s.should eq data
   end
 
@@ -49,12 +49,12 @@ describe Cride::FileHandler do
   end
 
   it "to_s againt the original sample data" do
-    file.to_s.should eq sample_data + '\n'
+    file.to_s.should eq sample_data
   end
 
   it "writes to the disk" do
     file.write
-    File.read(sample_file).should eq sample_data + '\n'
+    File.read(sample_file).should eq sample_data
   end
 
   File.delete sample_file

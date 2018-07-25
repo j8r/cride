@@ -7,7 +7,7 @@ class Cride::FileHandler
 
   def initialize(data = "", @name = "", @saved = false)
     @rows = data.lines
-    create_empty_row
+    @rows << ""
 
     @add = Add.new @rows, pointerof(@saved)
     @delete = Delete.new @rows, pointerof(@saved)
@@ -16,25 +16,14 @@ class Cride::FileHandler
   def initialize(file : File, @saved = true)
     @name = file.path
     @rows = File.read_lines @name
-    create_empty_row
+    @rows << ""
 
     @add = Add.new @rows, pointerof(@saved)
     @delete = Delete.new @rows, pointerof(@saved)
   end
 
-  private def create_empty_row
-    if @rows.empty?
-      @rows << ""
-    elsif !@rows.last.empty?
-      @rows << ""
-    end
-  end
-
   def to_s : String
-    String.build do |str|
-      @rows.join '\n', str
-      str << '\n'
-    end
+    @rows.join '\n'
   end
 
   # Write the editor's data to a file

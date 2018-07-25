@@ -25,8 +25,8 @@ struct Cride::Terminal::Render
   end
 
   def editor
-    # Clean the screen and set the cursor at home (on the top left)
-    @io << "\033[2J\033[H"
+    # Set the cursor at home (on the top left)
+    @io << "\033[H"
     y = 0
     # Render starting at the page_y line until the end of the terminal height
 
