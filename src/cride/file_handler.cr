@@ -15,7 +15,10 @@ class Cride::FileHandler
 
   def initialize(file : File, @saved = true)
     @name = file.path
-    @rows = File.read_lines @name
+    @rows = Array(String).new
+    File.each_line @name do |line|
+      @rows << line
+    end
     @rows << ""
 
     @add = Add.new @rows, pointerof(@saved)
