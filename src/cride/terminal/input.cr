@@ -32,49 +32,49 @@ module Cride
     enum Key
       ValidString      = -1
       Tilde            =  0
-      Ctrl_2           =  0
-      Ctrl_A
-      Ctrl_B
-      Ctrl_C
-      Ctrl_D
-      Ctrl_E
-      Ctrl_F
-      Ctrl_G
+      CTRL_2           =  0
+      CTRL_A
+      CTRL_B
+      CTRL_C
+      CTRL_D
+      CTRL_E
+      CTRL_F
+      CTRL_G
       Backspace0
-      Ctrl_H           = 8
+      CTRL_H           = 8
       Tab
-      Ctrl_I           = 9
+      CTRL_I           = 9
       LineField
-      Ctrl_J           = 10
-      Ctrl_K
-      Ctrl_L
+      CTRL_J           = 10
+      CTRL_K
+      CTRL_L
       Enter
       CarriageReturn   = 13
-      Ctrl_M           = 13
-      Ctrl_N
-      Ctrl_O
-      Ctrl_P
-      Ctrl_Q
-      Ctrl_R
-      Ctrl_S
-      Ctrl_T
-      Ctrl_U
-      Ctrl_V
-      Ctrl_W
-      Ctrl_X
-      Ctrl_Y
-      Ctrl_Z
+      CTRL_M           = 13
+      CTRL_N
+      CTRL_O
+      CTRL_P
+      CTRL_Q
+      CTRL_R
+      CTRL_S
+      CTRL_T
+      CTRL_U
+      CTRL_V
+      CTRL_W
+      CTRL_X
+      CTRL_Y
+      CTRL_Z
       Esc
-      Ctrl_LSQ_BRACKET = 27
-      Ctrl_3           = 27
-      Ctrl_4
-      Ctrl_Backslash   = 28
-      Ctrl_5
-      Ctrl_RSQ_BRACKET = 29
-      Ctrl_6           = 30
-      Ctrl_7
-      Ctrl_Slash       = 31
-      Ctrl_Underscore  = 31
+      CTRL_LSQ_BRACKET = 27
+      CTRL_3           = 27
+      CTRL_4
+      CTRL_Backslash   = 28
+      CTRL_5
+      CTRL_RSQ_BRACKET = 29
+      CTRL_6           = 30
+      CTRL_7
+      CTRL_Slash       = 31
+      CTRL_Underscore  = 31
       Space
       Exclamation
       QuotationMarks
@@ -86,19 +86,19 @@ module Cride
       Home
       PageUp
       PageDown
-      Ctrl_1           = 49
-      Ctrl_9           = 57
+      CTRL_1           = 49
+      CTRL_9           = 57
       F9               = 86
       F10
-      Ctrl_ArrowUp
-      Ctrl_ArrowDown
-      Ctrl_ArrowRight
-      Ctrl_ArrowLeft
+      CTRL_ArrowUp
+      CTRL_ArrowDown
+      CTRL_ArrowRight
+      CTRL_ArrowLeft
       F6
       F7
       F8
       Backspace        = 127
-      Ctrl_8           = 127
+      CTRL_8           = 127
       ArrowUp          = 183
       ArrowDown
       ArrowRight

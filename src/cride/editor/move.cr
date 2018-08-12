@@ -105,6 +105,65 @@ struct Cride::Editor::Move
     end
   end
 
+  # Blocks of text are separated by empty rows, or rows including only spaces/tabs
+  private def block_traverser(limit)
+    # If we are in an empty line, go until we reach a non empty line
+    while (@position.absolute_y != limit) && empty_row?(@file.rows[@position.absolute_y])
+      yield
+    end
+    # When an non empty line is reached, go to the begining of the block
+    while (@position.absolute_y != limit) && !empty_row?(@file.rows[@position.absolute_y])
+      yield
+    end
+    down if @position.absolute_y > 0
+  end
+
+  # Used for CTRL arrow up
+  def previous_block
+    up
+    block_traverser(0) { up }
+  end
+
+  # Used for CTRL arrow down
+  def next_block
+    block_traverser(@file.rows.size - 1) { down }
+  end
+
+  # An 'empty' row consists of only spaces and/or tabs, or no chars
+  def empty_row?(row : String)
+    row.each_char do |char|
+      return false if char != ' ' && char != '\t'
+    end
+    true
+  end
+
+  private def go_to_word(y_limit, x_limit)
+    yield
+    condition = ->(y_limit : Int32, x_limit : Int32) { (@position.absolute_y == y_limit) && (@position.absolute_x == x_limit) }
+
+    if (char = @file.rows[@position.absolute_y][@position.absolute_x - 1]?) && char.alphanumeric?
+      # Continue until a non alphanumeric character is found
+      while !condition.call(y_limit, x_limit) && (char = @file.rows[@position.absolute_y][@position.absolute_x - 1]?) && char.alphanumeric?
+        yield
+      end
+    else
+      # Continue until an alphanumeric character is found
+      while !condition.call(y_limit, x_limit) && (char = @file.rows[@position.absolute_y][@position.absolute_x - 1]?) && !char.alphanumeric?
+        yield
+      end
+    end
+  end
+
+  # Used for CTRL arrow left
+  def previous_word
+    go_to_word(0, 0) { left }
+  end
+
+  # Used for CTRL arrow right
+  def next_word
+    go_to_word(@file.rows.size - 1, @file.rows.last.size) { right }
+  end
+
   def adapt_end_line
     if @position.absolute_x > (line_size = @file.rows[@position.absolute_y].size)
       # the line if smaller than the one before

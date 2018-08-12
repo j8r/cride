@@ -35,15 +35,15 @@ struct Cride::Terminal
       @size.height = screen_size.ws_row.to_i - 2
       @render.editor
       case (input = wait_input).type
-      when Key::Ctrl_C, Key::Ctrl_Q, Key::Esc then break
-      when Key::Ctrl_S                        then @editor.file.write
-      when Key::Ctrl_D                        then @editor.add.duplicate_line
-      when Key::Ctrl_K                        then @editor.file.rows[@editor.position.absolute_y].empty? ? @editor.delete.line : @editor.delete.clear_line
-      when Key::Ctrl_H, Key::Backspace        then @editor.delete.back
-      when Key::Ctrl_ArrowUp                  then @editor.move.page_up
-      when Key::Ctrl_ArrowDown                then @editor.move.page_down
-      when Key::Ctrl_ArrowRight               then @editor.move.end_of_line
-      when Key::Ctrl_ArrowLeft                then @editor.position.reset_x
+      when Key::CTRL_C, Key::CTRL_Q, Key::Esc then break
+      when Key::CTRL_S                        then @editor.file.write
+      when Key::CTRL_D                        then @editor.add.duplicate_line
+      when Key::CTRL_K                        then @editor.file.rows[@editor.position.absolute_y].empty? ? @editor.delete.line : @editor.delete.clear_line
+      when Key::CTRL_H, Key::Backspace        then @editor.delete.back
+      when Key::CTRL_ArrowUp                  then @editor.move.previous_block
+      when Key::CTRL_ArrowDown                then @editor.move.next_block
+      when Key::CTRL_ArrowRight               then @editor.move.next_word
+      when Key::CTRL_ArrowLeft                then @editor.move.previous_word
       when Key::ArrowUp                       then @editor.move.up
       when Key::ArrowDown                     then @editor.move.down
       when Key::ArrowRight                    then @editor.move.right

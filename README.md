@@ -11,6 +11,7 @@ A light Crystal IDE
 * Modular (different front-ends can share same resources)
 * Colors
 * Read from the stdin
+* Advanced CTRL + Arrow keys jumps
 
 ## [CLI](https://github.com/j8r/clicr) usage
 
@@ -34,11 +35,11 @@ Build Cride:
 
 `crystal build src/cride`
 
-## Build with Docker                                                                       
+## Build with Docker
 
 To build a statically-linked `cride` binary:
-                                                                                      
-```sh                                                                                 
+
+```sh
 docker run -it --rm -v $PWD:/app -w /app jrei/crystal-alpine sh -c "\
 apk add --update clang-dev
 shards install
