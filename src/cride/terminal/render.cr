@@ -28,8 +28,8 @@ struct Cride::Terminal::Render
     # Set the cursor at home (on the top left)
     @io << "\033[H"
     y = 0
-    # Render starting at the page_y line until the end of the terminal height
 
+    # Render starting at the page_y line until the end of the terminal height
     @editor.file.rows[@editor.position.page_y..@editor.position.page_y + @editor.size.height].each do |row|
       x = 0
       width = @editor.size.width + @editor.tab_width row

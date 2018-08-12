@@ -6,7 +6,7 @@ module Cride::CLI
       name: "cride",
       info: "A light Crystal IDE/editor",
       arguments: %w(files...),
-      action: open_files,
+      action: "open_files",
     )
   rescue ex
     puts ex

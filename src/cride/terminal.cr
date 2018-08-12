@@ -67,6 +67,8 @@ struct Cride::Terminal
     end
     # Essential to call shutdown to reset lower-level terminal flags
   rescue ex
+    # Use normal screen buffer, restore the cursor, show the cursor
+    print "\033[?1049l" + "\033[u" + "\033[?25h"
     puts <<-ERR
     An error as occured. Please create an issue at https://github.com/j8r/cride with the steps to how reproduce this bug.
     
@@ -77,8 +79,6 @@ struct Cride::Terminal
     #{ex.backtrace.join('\n')}
     ERR
   ensure
-    @@file.flush
-    @@file.close
     # Use normal screen buffer, restore the cursor, show the cursor
     print "\033[?1049l" + "\033[u" + "\033[?25h"
   end
