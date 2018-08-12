@@ -67,19 +67,26 @@ struct Cride::Terminal
     end
     # Essential to call shutdown to reset lower-level terminal flags
   rescue ex
-    # Use normal screen buffer, restore the cursor, show the cursor
-    print "\033[?1049l" + "\033[u" + "\033[?25h"
+    reset
     puts <<-ERR
     An error as occured. Please create an issue at https://github.com/j8r/cride with the steps to how reproduce this bug.
     
-    cursor: #{@editor.position.cursor_x}, #{@editor.position.cursor_y}
-    page: #{@editor.position.page_y}, #{@editor.position.page_y}
+    cursor_y:  #{@editor.position.cursor_y + 1}, cursor_x: #{@editor.position.cursor_x + 1}
+    page_y:    #{@editor.position.page_y + 1}, page_x: #{@editor.position.page_x + 1}
+    file_rows: #{@editor.file.rows.size}, row_size: #{(row = @editor.file.rows[@editor.position.absolute_y]?) ? row.size : nil}
     Message: "#{ex.message}"
     Backtrace:
     #{ex.backtrace.join('\n')}
     ERR
-  ensure
+    exit 1
+  else
+    reset
+  end
+
+  private def reset
     # Use normal screen buffer, restore the cursor, show the cursor
     print "\033[?1049l" + "\033[u" + "\033[?25h"
+    @@file.flush
+    @@file.close
   end
 end
