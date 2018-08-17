@@ -8,12 +8,10 @@ module Cride::CLI
       arguments: %w(files...),
       action: "open_files",
     )
+  rescue ex : Clicr::Help
+    puts ex; exit 0
   rescue ex
-    puts ex
-    exit case ex.cause.to_s
-    when "help" then 0
-    else             1
-    end
+    abort ex
   end
 
   private def new_terminal(file : Cride::FileHandler)
