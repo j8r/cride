@@ -11,7 +11,9 @@ A light Crystal IDE
 * Modular (different front-ends can share same resources)
 * Colors
 * Read from the stdin
-* Advanced CTRL + Arrow keys jumps
+* Advanced CTRL + Arrow keys traversing
+* CTRL+D line duplication
+* CTRL+K line emptying/deletion
 
 ## [CLI](https://github.com/j8r/clicr) usage
 

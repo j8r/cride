@@ -137,18 +137,20 @@ struct Cride::Editor::Move
     true
   end
 
-  private def go_to_word(y_limit, x_limit)
+  private def word_traverser(diff)
     yield
-    condition = ->(y_limit : Int32, x_limit : Int32) { (@position.absolute_y == y_limit) && (@position.absolute_x == x_limit) }
+    row = @file.rows[@position.absolute_y]
 
-    if (char = @file.rows[@position.absolute_y][@position.absolute_x - 1]?) && char.alphanumeric?
+    condition = ->(row : String) { @position.absolute_y != @position.absolute_x != 0 && @position.absolute_x < row.size }
+
+    if (char = row[@position.absolute_x - diff]?) && char.alphanumeric?
       # Continue until a non alphanumeric character is found
-      while !condition.call(y_limit, x_limit) && (char = @file.rows[@position.absolute_y][@position.absolute_x - 1]?) && char.alphanumeric?
+      while condition.call(row) && (char = row[@position.absolute_x - diff]?) && char.alphanumeric?
         yield
       end
     else
       # Continue until an alphanumeric character is found
-      while !condition.call(y_limit, x_limit) && (char = @file.rows[@position.absolute_y][@position.absolute_x - 1]?) && !char.alphanumeric?
+      while condition.call(row) && (char = row[@position.absolute_x - diff]?) && !char.alphanumeric?
         yield
       end
     end
@@ -156,12 +158,12 @@ struct Cride::Editor::Move
 
   # Used for CTRL arrow left
   def previous_word
-    go_to_word(0, 0) { left }
+    word_traverser(1) { left }
   end
 
   # Used for CTRL arrow right
   def next_word
-    go_to_word(@file.rows.size - 1, @file.rows.last.size) { right }
+    word_traverser(0) { right }
   end
 
   def adapt_end_line
