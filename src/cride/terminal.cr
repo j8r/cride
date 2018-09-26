@@ -95,3 +95,5 @@ struct Cride::Terminal
     @@file.close
   end
 end
+
+require "./terminal/*"

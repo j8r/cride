@@ -38,3 +38,5 @@ class Cride::Size
   def initialize(@width = 0, @height = 0)
   end
 end
+
+require "./editor/*"

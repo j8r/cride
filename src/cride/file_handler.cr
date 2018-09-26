@@ -1,7 +1,7 @@
 class Cride::FileHandler
-  property rows
-  property saved
-  property name
+  property rows : Array(String)
+  property saved : Bool
+  property name : String
   getter add : Add
   getter delete : Delete
 
@@ -15,10 +15,7 @@ class Cride::FileHandler
 
   def initialize(file : File, @saved = true)
     @name = file.path
-    @rows = Array(String).new
-    File.each_line @name do |line|
-      @rows << line
-    end
+    @rows = File.read_lines @name
     @rows << ""
 
     @add = Add.new @rows, pointerof(@saved)
@@ -37,3 +34,5 @@ class Cride::FileHandler
     end
   end
 end
+
+require "./file_handler/*"

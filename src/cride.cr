@@ -1,5 +1,4 @@
-require "clicr"
 require "./libc/*"
-require "./cride/**"
+require "./cride/*"
 
 Cride::CLI.create

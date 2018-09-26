@@ -1,3 +1,5 @@
+require "clicr"
+
 module Cride::CLI
   extend self
 
