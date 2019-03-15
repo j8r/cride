@@ -1,12 +1,15 @@
+require "./editor"
+require "./libc/*"
+
 struct Cride::Terminal
   #  @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
   getter color : Color
-  getter size : Cride::Size
+  getter size : Cride::Editor::Size
   class_getter file = File.open "/dev/tty"
 
   def initialize(file : Cride::FileHandler, @color = Color.new)
     # Create instance variables
-    @size = Cride::Size.new
+    @size = Cride::Editor::Size.new
     @editor = Cride::Editor.new file, @size
     @render = Render.new @editor, @color, STDOUT
 

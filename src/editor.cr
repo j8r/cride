@@ -1,3 +1,5 @@
+require "./file_handler"
+
 class Cride::Editor
   getter position = Position.new
   getter file : Cride::FileHandler
@@ -30,12 +32,12 @@ class Cride::Editor
     @add = Cride::Editor::Add.new @file, @position, @move
     @delete = Cride::Editor::Delete.new @file, @position, @move
   end
-end
 
-class Cride::Size
-  property width : Int32, height : Int32
+  class Size
+    property width : Int32, height : Int32
 
-  def initialize(@width = 0, @height = 0)
+    def initialize(@width = 0, @height = 0)
+    end
   end
 end
 

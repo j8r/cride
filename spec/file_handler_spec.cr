@@ -1,4 +1,5 @@
-require "./spec_helper"
+require "spec"
+require "../src/file_handler"
 
 describe Cride::FileHandler do
   sample_data = <<-DATA

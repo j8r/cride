@@ -35,7 +35,7 @@ Generate bindings with [crystal-autobind](https://github.com/j8r/crystal-autobin
 
 Build Cride:
 
-`crystal build src/cride`
+`shards build`
 
 ## Build with Docker
 
@@ -46,7 +46,7 @@ docker run -it --rm -v $PWD:/app -w /app jrei/crystal-alpine sh -c "\
 apk add --update clang-dev
 shards install
 ./gen-bindings.sh
-crystal build --static --release --no-debug src/cride.cr
+shards build --static --release --no-debug
 rm -r lib src/libc
 chown 1000:1000 cride"
 ```

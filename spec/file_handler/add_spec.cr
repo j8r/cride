@@ -1,4 +1,8 @@
-require "../spec_helper"
+class Cride::FileHandler
+end
+
+require "spec"
+require "../../src/file_handler/add.cr"
 
 describe Cride::FileHandler::Add do
   saved = false

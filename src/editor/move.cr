@@ -1,7 +1,7 @@
 struct Cride::Editor::Move
   @file : Cride::FileHandler
   @position : Position
-  @size : Cride::Size
+  @size : Size
 
   def initialize(@file, @position, @size)
   end

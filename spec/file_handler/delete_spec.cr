@@ -1,6 +1,10 @@
-require "../spec_helper"
+class Cride::FileHandler
+end
 
-describe Cride::FileHandler::Add do
+require "spec"
+require "../../src/file_handler/delete"
+
+describe Cride::FileHandler::Delete do
   saved = false
 
   it "deletes a char" do

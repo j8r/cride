@@ -1,4 +1,5 @@
 require "clicr"
+require "./terminal"
 
 module Cride::CLI
   extend self
@@ -45,3 +46,5 @@ module Cride::CLI
     end
   end
 end
+
+Cride::CLI.create
