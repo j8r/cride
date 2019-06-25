@@ -1,0 +1,25 @@
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+- name: format
+  image: jrei/crystal-alpine
+  commands:
+  - crystal tool format --check
+
+- name: build
+  image: jrei/crystal-alpine
+  commands:
+  - apk add clang-dev
+  - shards install
+  - ./gen-bindings.sh
+  - shards build --static
+
+- name: test
+  image: jrei/crystal-alpine
+  commands:
+  - crystal spec

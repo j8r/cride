@@ -1,5 +1,8 @@
 # Cride
 
+[![Build Status](https://cloud.drone.io/api/badges/j8r/cride/status.svg)](https://cloud.drone.io/j8r/cride)
+[![ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=flat-square)](https://en.wikipedia.org/wiki/ISC_license)
+
 A light Crystal IDE
 
 ![screenshot](https://i.imgur.com/UCSsnDz.png)
@@ -53,4 +56,4 @@ chown 1000:1000 cride"
 
 ## License
 
-Copyright (c) 2018 Julien Reichardt - ISC License
+Copyright (c) 2018-2019 Julien Reichardt - ISC License
