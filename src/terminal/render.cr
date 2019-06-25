@@ -1,9 +1,5 @@
 struct Cride::Terminal::Render
-  @editor : Cride::Editor
-  @color : Color
-  @io : IO
-
-  def initialize(@editor, @color, @io = STDOUT)
+  def initialize(@editor : Editor, @color : Color, @io : IO = STDOUT)
   end
 
   private def cell_color(x, y)
@@ -85,7 +81,7 @@ struct Cride::Terminal::Render
       str << row.size + 1 + @editor.tab_width row
     end
     # Return a colored info line
-    if @editor.file.saved
+    if @editor.file.saved?
       @io << @color.bg_info << @color.fg_info
     else
       @io << @color.bg_unsaved << @color.fg_unsaved
@@ -93,7 +89,7 @@ struct Cride::Terminal::Render
     @io << @editor.file.name
     @io << @color.bg_info << @color.fg_info
     @io << position
-    fill_line (@editor.file.name + position).size
+    fill_line (@editor.file.name.to_s + position).size
   end
 
   # Fill remainig cells with spaces

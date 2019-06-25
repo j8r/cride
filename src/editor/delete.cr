@@ -1,9 +1,5 @@
 struct Cride::Editor::Delete
-  @file : Cride::FileHandler
-  @position : Position
-  @move : Move
-
-  def initialize(@file, @position, @move)
+  def initialize(@file : FileHandler, @position : Position, @move : Move)
   end
 
   def back

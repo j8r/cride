@@ -17,8 +17,8 @@ module Cride::CLI
     abort ex
   end
 
-  private def new_terminal(file : Cride::FileHandler)
-    Cride::Terminal.new file: file, color: Cride::Terminal::Color.new(
+  private def new_terminal(file : FileHandler)
+    Terminal.new file: file, color: Terminal::Color.new(
       fg: 7,
       bg: 234,
       bg_info: 0,
@@ -29,18 +29,18 @@ module Cride::CLI
   private def open_files(files)
     if !STDIN.tty?
       STDIN.read_timeout = 0
-      new_terminal Cride::FileHandler.new STDIN.gets_to_end
+      new_terminal FileHandler.new STDIN
     elsif files.empty?
-      new_terminal Cride::FileHandler.new
+      new_terminal FileHandler.new
     else
       files.each do |file|
         case File
         when .directory? file
           abort file + " can't be read because it is a directory"
         when .exists? file
-          new_terminal Cride::FileHandler.new(File.new file)
+          new_terminal FileHandler.read file
         else
-          new_terminal Cride::FileHandler.new(name: file)
+          new_terminal FileHandler.new(name: file)
         end
       end
     end

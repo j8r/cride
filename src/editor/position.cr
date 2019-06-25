@@ -2,7 +2,7 @@ class Cride::Editor::Position
   getter absolute_x : Int32
   getter absolute_y : Int32
 
-  def initialize(@cursor_x = 0, @cursor_y = 0, @page_x = 0, @page_y = 0)
+  def initialize(@cursor_x : Int32 = 0, @cursor_y : Int32 = 0, @page_x : Int32 = 0, @page_y : Int32 = 0)
     @absolute_x = @cursor_x + @page_x
     @absolute_y = @cursor_y + @page_y
   end

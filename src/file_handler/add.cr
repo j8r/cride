@@ -1,26 +1,21 @@
 struct Cride::FileHandler::Add
-  @rows : Array(String)
-  @saved : Pointer(Bool)
-
-  def initialize(@rows, @saved)
+  def initialize(@rows : Array(String))
   end
 
-  def char(x, y, char)
+  def char(x : Int32, y : Int32, char : Char)
     @rows[y] = @rows[y].insert x, char
-    @saved.value = false
   end
 
-  def set_char(x, y, char)
+  def set_char(x : Int32, y : Int32, char : Char)
     line = @rows[y]
     @rows[y] = if line.size > x
                  line.sub x, char
                else
                  line + char
                end
-    @saved.value = false
   end
 
-  def line(x, y)
+  def line(x : Int32, y : Int32)
     old_row = @rows[y]
 
     # Split the line in two
@@ -28,11 +23,9 @@ struct Cride::FileHandler::Add
 
     # Append to the new array
     @rows.insert y + 1, new_row
-    @saved.value = false
   end
 
-  def duplicate_line(y)
+  def duplicate_line(y : Int32)
     @rows.insert y + 1, @rows[y].dup
-    @saved.value = false
   end
 end

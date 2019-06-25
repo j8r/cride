@@ -1,28 +1,21 @@
 struct Cride::FileHandler::Delete
-  @rows : Array(String)
-  @saved : Pointer(Bool)
-
-  def initialize(@rows, @saved)
+  def initialize(@rows : Array(String))
   end
 
-  def char(x, y)
+  def char(x : Int32, y : Int32)
     @rows[y] = @rows[y].sub(x, "")
-    @saved.value = false
   end
 
-  def next_line_append_previous(y)
-    # delete the line and append the remaing characters to the previous
+  # Deletes the line and append the remaing characters to the previous
+  def next_line_append_previous(y : Int32)
     @rows[y] += @rows.delete_at y + 1
-    @saved.value = false
   end
 
-  def clear_line(y)
+  def clear_line(y : Int32)
     @rows[y] = ""
-    @saved.value = false
   end
 
-  def line(y)
+  def line(y : Int32)
     @rows.delete_at y
-    @saved.value = false
   end
 end

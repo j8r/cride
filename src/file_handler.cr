@@ -1,25 +1,48 @@
 class Cride::FileHandler
   property rows : Array(String)
-  property saved : Bool
-  property name : String
+  # Name or file path in disk.
+  property name : String?
   getter add : Add
   getter delete : Delete
 
-  def initialize(data = "", @name = "", @saved = false)
-    @rows = data.lines
-    @rows << ""
+  @previous_row_hash : UInt64
 
-    @add = Add.new @rows, pointerof(@saved)
-    @delete = Delete.new @rows, pointerof(@saved)
+  # The data is saved on disk.
+  def saved? : Bool
+    current_row_hash = @rows.hash
+    is_saved = @previous_row_hash == current_row_hash
+    @previous_row_hash = current_row_hash
+    is_saved
   end
 
-  def initialize(file : File, @saved = true)
-    @name = file.path
-    @rows = File.read_lines @name
-    @rows << ""
+  # Reads from a `String`.
+  def self.new(data : String = "", name : String? = nil, saved : Bool = false)
+    rows = data.lines
+    rows << ""
+    new name, rows, saved
+  end
 
-    @add = Add.new @rows, pointerof(@saved)
-    @delete = Delete.new @rows, pointerof(@saved)
+  # Read from an `IO`.
+  def self.new(io : IO, name : String? = nil, saved : Bool = false)
+    rows = Array(String).new
+    io.each_line do |line|
+      rows << line
+    end
+    rows << ""
+    new name, rows, saved
+  end
+
+  # Reads from a file.
+  def self.read(file_name : String?, saved : Bool = true)
+    rows = File.read_lines file_name
+    rows << ""
+    new file_name, rows, saved
+  end
+
+  def initialize(@name : String?, @rows : Array(String), saved : Bool = false)
+    @previous_row_hash = saved ? rows.hash : 0_u64
+    @add = Add.new @rows
+    @delete = Delete.new @rows
   end
 
   def to_s : String
@@ -28,9 +51,9 @@ class Cride::FileHandler
 
   # Write the editor's data to a file
   def write
-    if !@name.empty?
-      File.write @name, to_s
-      @saved = true
+    if file_path = @name
+      File.write file_path, to_s
+      @previous_row_hash = rows.hash
     end
   end
 end

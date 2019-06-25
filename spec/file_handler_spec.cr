@@ -1,22 +1,63 @@
 require "spec"
 require "../src/file_handler"
 
-describe Cride::FileHandler do
-  sample_data = <<-DATA
-  this
-   is\n
-  sample data\n
-  DATA
+SAMPLE_DATA = <<-DATA
+this
+ is\n
+sample data\n
+DATA
 
-  sample_file = "./file_sample_test"
-  File.write sample_file, sample_data
-  file = Cride::FileHandler.new
+SAMPLE_FILE_PATH = File.tempname(suffix: "file_sample_test")
+
+describe Cride::FileHandler do
+  describe "parses a file sample" do
+    File.write SAMPLE_FILE_PATH, SAMPLE_DATA
+    file = Cride::FileHandler.read SAMPLE_FILE_PATH
+
+    it "checks rows size" do
+      file.rows.size.should eq SAMPLE_DATA.lines.size + 1
+    end
+
+    it "checks file name" do
+      file.name.should eq SAMPLE_FILE_PATH
+    end
+
+    it "should be saved" do
+      file.saved?.should be_true
+    end
+
+    it "to_s againt the original sample data" do
+      file.to_s.should eq SAMPLE_DATA
+    end
+
+    it "writes to the disk" do
+      file.write
+      File.read(SAMPLE_FILE_PATH).should eq SAMPLE_DATA
+    end
+  ensure
+    File.delete SAMPLE_FILE_PATH
+  end
 
   it "parses emtpy data" do
-    file.rows.should eq [""]
-    file.name.should eq ""
-    file.saved.should be_false
-    file.to_s.should eq ""
+    empty_file = Cride::FileHandler.new
+    empty_file.rows.should eq [""]
+    empty_file.name.should be_nil
+    empty_file.saved?.should be_false
+    empty_file.to_s.should eq ""
+  end
+
+  it "parses from io" do
+    from_io = Cride::FileHandler.new IO::Memory.new(SAMPLE_DATA)
+    from_io.rows.size.should eq SAMPLE_DATA.lines.size + 1
+    from_io.name.should be_nil
+    from_io.saved?.should be_false
+  end
+
+  it "parses a sample data string" do
+    file_data = Cride::FileHandler.new SAMPLE_DATA
+    file_data.rows.size.should eq SAMPLE_DATA.lines.size + 1
+    file_data.name.should be_nil
+    file_data.saved?.should be_false
   end
 
   it "parses an empty line" do
@@ -25,38 +66,4 @@ describe Cride::FileHandler do
     temp.rows.should eq ["", ""]
     temp.to_s.should eq data
   end
-
-  it "parses a sample file" do
-    file = Cride::FileHandler.new File.new(sample_file)
-  end
-
-  it "checks rows size" do
-    file.rows.size.should eq sample_data.lines.size + 1
-  end
-
-  it "checks file name" do
-    file.name.should eq sample_file
-  end
-
-  it "should be saved" do
-    file.saved.should be_true
-  end
-
-  it "parses a sample data" do
-    file_data = Cride::FileHandler.new sample_data
-    file_data.rows.should eq file.rows
-    file_data.name.should eq ""
-    file_data.saved.should be_false
-  end
-
-  it "to_s againt the original sample data" do
-    file.to_s.should eq sample_data
-  end
-
-  it "writes to the disk" do
-    file.write
-    File.read(sample_file).should eq sample_data
-  end
-
-  File.delete sample_file
 end

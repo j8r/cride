@@ -1,29 +1,28 @@
 struct Cride::Terminal
   struct Input
-    getter slice = Bytes.new 4096
+    @slice : Bytes = Bytes.new 4096
 
     def initialize
-      Cride::Terminal.file.raw &.read slice
+      Cride::Terminal.file.raw &.read @slice
     end
 
     def type
       Key.new(if control?
-        (slice[0] + slice[1] + slice[2] + slice[3] + slice[4] + slice[5]).to_i
+        (@slice[0] + @slice[1] + @slice[2] + @slice[3] + @slice[4] + @slice[5]).to_i
       else
         -1
       end)
     end
 
     def to_s
-      String.new(slice).rstrip '\u{0}'
+      String.new(@slice).rstrip '\u{0}'
     end
 
     def control?
-      case slice[0].unsafe_chr
+      case @slice[0].unsafe_chr
       when '\t', '\r' then false
       when .control?  then true
-      else
-        false
+      else                 false
       end
     end
   end

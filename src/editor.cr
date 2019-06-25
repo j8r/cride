@@ -1,14 +1,20 @@
 require "./file_handler"
 
 class Cride::Editor
-  getter position = Position.new
-  getter file : Cride::FileHandler
+  getter position : Position = Position.new
+  getter file : FileHandler
   getter add : Add
   getter delete : Delete
   getter move : Move
   getter size : Size
-  property insert = false
-  property tab_spaces = 4 # Must be at least 1
+  property insert : Bool = false
+  property tab_spaces : Int32 = 4 # Must be at least 1
+
+  def initialize(@file : FileHandler, @size : Size)
+    @move = Editor::Move.new @file, @position, @size
+    @add = Editor::Add.new @file, @position, @move
+    @delete = Editor::Delete.new @file, @position, @move
+  end
 
   def tab_width(line : String) : Int32
     @tab_spaces * line.count('\t')
@@ -25,12 +31,6 @@ class Cride::Editor
     # set the cursor at the begining of the tab if on it
     cursor_x -= @tab_spaces - 1 if row[@position.cursor_x]? == '\t'
     cursor_x
-  end
-
-  def initialize(@file, @size)
-    @move = Cride::Editor::Move.new @file, @position, @size
-    @add = Cride::Editor::Add.new @file, @position, @move
-    @delete = Cride::Editor::Delete.new @file, @position, @move
   end
 
   class Size
