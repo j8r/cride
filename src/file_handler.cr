@@ -9,10 +9,7 @@ class Cride::FileHandler
 
   # The data is saved on disk.
   def saved? : Bool
-    current_row_hash = @rows.hash
-    is_saved = @previous_row_hash == current_row_hash
-    @previous_row_hash = current_row_hash
-    is_saved
+    @previous_row_hash == @rows.hash
   end
 
   # Reads from a `String`.

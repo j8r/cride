@@ -33,6 +33,19 @@ describe Cride::FileHandler do
     it "writes to the disk" do
       file.write
       File.read(SAMPLE_FILE_PATH).should eq SAMPLE_DATA
+      file.saved?.should be_true
+    end
+
+    it "is not saved" do
+      file.rows << ""
+      file.saved?.should be_false
+    end
+
+    it "is saved" do
+      file.rows << ""
+      file.saved?.should be_false
+      file.write
+      file.saved?.should be_true
     end
   ensure
     File.delete SAMPLE_FILE_PATH
