@@ -3,7 +3,7 @@ struct Cride::Terminal::Render
   end
 
   private def cell_color(x, y)
-    if y == @editor.position.cursor_y
+    if y == @editor.cursor_y
       # highlight the selected line
       if x == @editor.cursor_x_with_tabs
         # cursor position
@@ -26,12 +26,12 @@ struct Cride::Terminal::Render
     y = 0
 
     # Render starting at the page_y line until the end of the terminal height
-    @editor.file.rows[@editor.position.page_y..@editor.position.page_y + @editor.size.height].each do |row|
+    @editor.file.rows[@editor.page_y..@editor.page_y + @editor.height].each do |row|
       x = 0
-      width = @editor.size.width + @editor.tab_width row
+      width = @editor.width + @editor.tab_width row
       # Start to render at the page_x until the end of the terminal width
-      if row[@editor.position.page_x]?
-        row[@editor.position.page_x..@editor.position.page_x + width].each_char do |char|
+      if row[@editor.page_x]?
+        row[@editor.page_x..@editor.page_x + width].each_char do |char|
           # highlight current line
           if char == '\t'
             @editor.tab_spaces.times do
@@ -46,7 +46,7 @@ struct Cride::Terminal::Render
           end
         end
       end
-      if x == @editor.cursor_x_with_tabs && y == @editor.position.cursor_y
+      if x == @editor.cursor_x_with_tabs && y == @editor.cursor_y
         cell_color x, y
         @io << ' '
         x += 1
@@ -57,7 +57,7 @@ struct Cride::Terminal::Render
       y += 1
     end
     # Fill remaining empty rows
-    (@editor.size.height + 1 - y).times do
+    (@editor.height + 1 - y).times do
       @io << @color.fg << @color.bg
       fill_line 0
       @io << '\n'
@@ -69,14 +69,14 @@ struct Cride::Terminal::Render
   end
 
   def info
-    row = @editor.file.rows[@editor.position.absolute_y]
+    row = @editor.file.rows[@editor.absolute_y]
     position = String.build do |str|
       str << " y:"
-      str << @editor.position.absolute_y + 1
+      str << @editor.absolute_y + 1
       str << '/'
       str << @editor.file.rows.size
       str << " x:"
-      str << @editor.position.absolute_x + 1 + @editor.tab_before_absolute_width row
+      str << @editor.absolute_x + 1 + @editor.tab_before_absolute_width row
       str << '/'
       str << row.size + 1 + @editor.tab_width row
     end
@@ -94,7 +94,7 @@ struct Cride::Terminal::Render
 
   # Fill remainig cells with spaces
   def fill_line(line_size)
-    (@editor.size.width + 1 - line_size).times do
+    (@editor.width + 1 - line_size).times do
       @io << ' '
     end
   end

@@ -1,19 +1,17 @@
 require "./file_handler"
 
 class Cride::Editor
-  getter position : Position = Position.new
   getter file : FileHandler
-  getter add : Add
-  getter delete : Delete
-  getter move : Move
-  getter size : Size
+  property width : Int32 = 0
+  property height : Int32 = 0
   property insert : Bool = false
   property tab_spaces : Int32 = 4 # Must be at least 1
+  getter cursor_x : Int32 = 0
+  getter cursor_y : Int32 = 0
+  getter page_x : Int32 = 0
+  getter page_y : Int32 = 0
 
-  def initialize(@file : FileHandler, @size : Size)
-    @move = Editor::Move.new @file, @position, @size
-    @add = Editor::Add.new @file, @position, @move
-    @delete = Editor::Delete.new @file, @position, @move
+  def initialize(@file : FileHandler)
   end
 
   def tab_width(line : String) : Int32
@@ -22,22 +20,30 @@ class Cride::Editor
 
   # Count tabs before the cursor
   def tab_before_absolute_width(line : String) : Int32
-    (@tab_spaces - 1) * line[0..@position.absolute_x].count('\t')
+    (@tab_spaces - 1) * line[0..absolute_x].count('\t')
   end
+
+  {% for pos in %w(absolute_x absolute_y) %}
+    def {{pos.id}} : Int32
+      # if {{pos.id}} changes, absolute position changes too
+      @cursor_{{pos.chars.last.id}} + @page_{{pos.chars.last.id}}
+    end
+  {% end %}
 
   def cursor_x_with_tabs : Int32
-    row = @file.rows[@position.absolute_y]
-    cursor_x = @position.cursor_x + tab_before_absolute_width row
+    row = @file.rows[absolute_y]
+    @cursor_x = @cursor_x + tab_before_absolute_width row
     # set the cursor at the begining of the tab if on it
-    cursor_x -= @tab_spaces - 1 if row[@position.cursor_x]? == '\t'
-    cursor_x
+    @cursor_x -= @tab_spaces - 1 if row[@cursor_x]? == '\t'
+    @cursor_x
   end
 
-  class Size
-    property width : Int32, height : Int32
+  def reset_x : Nil
+    @cursor_x = @page_x = 0
+  end
 
-    def initialize(@width = 0, @height = 0)
-    end
+  def reset_y : Nil
+    @cursor_y = @page_y = 0
   end
 end
 

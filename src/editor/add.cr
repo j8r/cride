@@ -1,26 +1,23 @@
-struct Cride::Editor::Add
-  def initialize(@file : FileHandler, @position : Position, @move : Move)
-  end
-
+class Cride::Editor
   def set_char(char : Char)
-    @file.add.set_char @position.absolute_x, @position.absolute_y, char
-    @move.right
+    @file.add.set_char absolute_x, absolute_y, char
+    move_right
   end
 
-  def char(char : Char)
-    @file.add.char @position.absolute_x, @position.absolute_y, char
-    @move.right
+  def add_char(char : Char)
+    @file.add.char absolute_x, absolute_y, char
+    move_right
   end
 
-  def line
-    @file.add.line @position.absolute_x, @position.absolute_y
+  def add_line
+    @file.add.line absolute_x, absolute_y
     # Move the cursor down at the begining of the line
-    @position.reset_x
-    @move.down
+    reset_x
+    move_down
   end
 
-  def duplicate_line
-    @file.add.duplicate_line @position.absolute_y
-    @move.down
+  def add_duplicated_line
+    @file.add.duplicate_line absolute_y
+    move_down
   end
 end
