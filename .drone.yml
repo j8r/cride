@@ -14,9 +14,7 @@ steps:
 - name: build
   image: jrei/crystal-alpine
   commands:
-  - apk add clang-dev
   - shards install
-  - ./gen-bindings.sh
   - shards build --static
 
 - name: test

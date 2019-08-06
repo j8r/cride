@@ -18,10 +18,6 @@ struct Cride::Terminal
     main_loop
   end
 
-  lib C
-    fun ioctl(fd : LibC::Int, request : LibC::SizeT, winsize : LibC::Winsize*) : LibC::Int
-  end
-
   def wait_input
     Input.new
   rescue
@@ -33,7 +29,7 @@ struct Cride::Terminal
   # The main editor loop
   def main_loop
     loop do
-      C.ioctl(1, LibC::TIOCGWINSZ, out screen_size)
+      LibC.ioctl(1, LibC::TIOCGWINSZ, out screen_size)
       @size.width = screen_size.ws_col.to_i - 1
       @size.height = screen_size.ws_row.to_i - 2
       @render.editor

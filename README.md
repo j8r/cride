@@ -32,10 +32,6 @@ Install project dependencies
 
 `shards install`
 
-Generate bindings with [crystal-autobind](https://github.com/j8r/crystal-autobind)
-
-`./gen-bindings.sh`
-
 Build Cride:
 
 `shards build`
@@ -48,9 +44,7 @@ To build a statically-linked `cride` binary:
 docker run -it --rm -v $PWD:/app -w /app jrei/crystal-alpine sh -c "\
 apk add --update clang-dev
 shards install
-./gen-bindings.sh
-shards build --static --release --no-debug
-rm -r lib src/libc
+shards build --static --release
 chown 1000:1000 cride"
 ```
 

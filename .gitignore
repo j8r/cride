@@ -1,5 +1,3 @@
-/.shards
 /bin
 /lib
-/src/libc
 /shard.lock
