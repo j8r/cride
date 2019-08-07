@@ -1,6 +1,5 @@
-struct Cride::Terminal::Render
-  def initialize(@editor : Editor, @color : Color, @io : IO = STDOUT)
-  end
+struct Cride::Terminal
+  @io : IO
 
   private def cell_color(x, y)
     if y == @editor.cursor_y
@@ -20,7 +19,7 @@ struct Cride::Terminal::Render
     end
   end
 
-  def editor
+  def render_editor
     # Set the cursor at home (on the top left)
     @io << "\033[H"
     y = 0
@@ -64,11 +63,11 @@ struct Cride::Terminal::Render
     end
 
     # Add the lower info line
-    @io << info
+    render_info
     @io.flush
   end
 
-  def info
+  def render_info
     row = @editor.file.rows[@editor.absolute_y]
     position = String.build do |str|
       str << " y:"
@@ -93,7 +92,7 @@ struct Cride::Terminal::Render
   end
 
   # Fill remainig cells with spaces
-  def fill_line(line_size)
+  private def fill_line(line_size)
     (@editor.width + 1 - line_size).times do
       @io << ' '
     end

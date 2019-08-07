@@ -1,9 +1,16 @@
 struct Cride::Terminal
   struct Input
-    @slice : Bytes = Bytes.new 4096
+    getter slice : Bytes = Bytes.new 6
+    getter file : File
 
-    def initialize
-      Cride::Terminal.file.raw &.read @slice
+    def initialize(@file : File)
+    end
+
+    # Read the raw input of the IO.
+    def read_raw : Input
+      @slice = Bytes.new 512
+      @file.raw &.read @slice
+      self
     end
 
     def type

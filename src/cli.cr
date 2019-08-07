@@ -17,8 +17,8 @@ module Cride::CLI
     abort ex
   end
 
-  private def new_terminal(file : FileHandler)
-    Terminal.new file: file, color: Terminal::Color.new(
+  private def new_terminal(file_handler : FileHandler)
+    Terminal.new file_handler: file_handler, color: Terminal::Color.new(
       fg: 7,
       bg: 234,
       bg_info: 0,

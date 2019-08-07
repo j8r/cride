@@ -2,26 +2,17 @@ require "./editor"
 require "./libc/*"
 
 struct Cride::Terminal
-  #  @event_master = TermboxBindings::Event.new type: 0, mod: 0, key: 0, ch: 0, w: 0, x: 0, y: 0
   getter color : Color
-  class_getter file = File.open "/dev/tty"
+  getter file = File.open "/dev/tty"
 
-  def initialize(file : Cride::FileHandler, @color = Color.new)
-    # Create instance variables
-    @editor = Editor.new file
-    @render = Render.new @editor, @color, STDOUT
+  def initialize(file_handler : FileHandler, @color = Color.new)
+    @io = STDOUT
+    @editor = Editor.new file_handler
+    @input = Input.new @file
 
     # Save cursor, use alternate screen buffer, hide the cursor
     print "\033[s", "\033[?1049h", "\033[?25l"
     main_loop
-  end
-
-  def wait_input
-    Input.new
-  rescue
-    @@file.close
-    @@file = File.open "/dev/tty"
-    wait_input
   end
 
   # The main editor loop
@@ -30,8 +21,8 @@ struct Cride::Terminal
       LibC.ioctl(1, LibC::TIOCGWINSZ, out screen_size)
       @editor.width = screen_size.ws_col.to_i - 1
       @editor.height = screen_size.ws_row.to_i - 2
-      @render.editor
-      case (input = wait_input).type
+      render_editor
+      case (input = @input.read_raw).type
       when Key::CTRL_C, Key::CTRL_Q, Key::Esc then break
       when Key::CTRL_S
         begin
@@ -88,8 +79,8 @@ struct Cride::Terminal
   private def reset
     # Use normal screen buffer, restore the cursor, show the cursor
     print "\033[?1049l", "\033[u", "\033[?25h"
-    @@file.flush
-    @@file.close
+    @file.flush
+    @file.close
   end
 end
 
