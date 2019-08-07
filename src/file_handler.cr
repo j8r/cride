@@ -1,6 +1,6 @@
 class Cride::FileHandler
   property rows : Array(String)
-  # Name or file path in disk.
+  # Name or file path on disk.
   property name : String?
   getter add : Add
   getter delete : Delete
@@ -42,15 +42,17 @@ class Cride::FileHandler
     @delete = Delete.new @rows
   end
 
-  def to_s : String
-    @rows.join '\n'
+  def to_s(io : IO) : Nil
+    @rows.join '\n', io
   end
 
-  # Write the editor's data to a file
+  # Write the editor's data to a file.
   def write
     if file_path = @name
-      File.write file_path, to_s
-      @previous_row_hash = rows.hash
+      File.open file_path, "w" do |io|
+        to_s io
+      end
+      @previous_row_hash = @rows.hash
     end
   end
 end
