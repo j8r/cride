@@ -24,7 +24,7 @@ You have to build Cride (see the **Development** section below).
 
 Open a file:
 
-`./cride README.md`
+`bin/cride README.md`
 
 ## Development
 
@@ -42,11 +42,12 @@ To build a statically-linked `cride` binary:
 
 ```sh
 docker run -it --rm -v $PWD:/app -w /app jrei/crystal-alpine sh -c "\
-apk add --update clang-dev
 shards install
 shards build --static --release
-chown 1000:1000 cride"
+chown 1000:1000 bin/cride"
 ```
+
+The binary built is `bin/cride`.
 
 ## License
 
