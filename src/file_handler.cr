@@ -43,7 +43,7 @@ class Cride::FileHandler
   end
 
   def to_s(io : IO) : Nil
-    @rows.join '\n', io
+    @rows.join io, '\n'
   end
 
   # Write the editor's data to a file.
