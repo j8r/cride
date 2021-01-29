@@ -46,4 +46,4 @@ The binary built is `bin/cride`.
 
 ## License
 
-Copyright (c) 2018-2019 Julien Reichardt - ISC License
+Copyright (c) 2018-2021 Julien Reichardt - ISC License
