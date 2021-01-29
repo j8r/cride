@@ -47,7 +47,7 @@ struct Cride::Terminal
       when Key::PageDown               then @editor.move_page_down
       when Key::Enter                  then @editor.add_line
       when Key::Insert                 then @editor.insert = !@editor.insert
-      when Key::ValidString
+      when nil
         input.to_s.each_char do |char|
           if char == '\r'
             @editor.add_line

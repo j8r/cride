@@ -13,12 +13,10 @@ struct Cride::Terminal
       self
     end
 
-    def type
-      Key.new(if control?
-        (@slice[0] + @slice[1] + @slice[2] + @slice[3] + @slice[4] + @slice[5]).to_i
-      else
-        -1
-      end)
+    def type : Key?
+      if control?
+        Key.new @slice[0] &+ @slice[1] &+ @slice[2] &+ @slice[3] &+ @slice[4] &+ @slice[5]
+      end
     end
 
     def to_s
@@ -34,10 +32,9 @@ struct Cride::Terminal
     end
   end
 
-  enum Key
-    ValidString      = -1
-    Tilde            =  0
-    CTRL_2           =  0
+  enum Key : UInt8
+    Tilde            = 0
+    CTRL_2           = 0
     CTRL_A
     CTRL_B
     CTRL_C
@@ -110,14 +107,14 @@ struct Cride::Terminal
     ArrowLeft
   end
 
-  enum InputMode
+  enum InputMode : UInt8
     Current
     Esc
     Alt
     Mouse
   end
 
-  enum Output
+  enum Output : UInt8
     Current
     Normal
     C_256
@@ -126,7 +123,7 @@ struct Cride::Terminal
   end
 
   @[Flags]
-  enum Event
+  enum Event : UInt8
     Key    = 1
     Resize
     Mouse
