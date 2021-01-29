@@ -18,7 +18,7 @@ A light Crystal IDE
 * CTRL+D line duplication
 * CTRL+K line emptying/deletion
 
-## [CLI](https://github.com/j8r/clicr) usage
+## Command usage
 
 You have to build Cride (see the **Development** section below).
 
@@ -27,10 +27,6 @@ Open a file:
 `bin/cride README.md`
 
 ## Development
-
-Install project dependencies
-
-`shards install`
 
 Build Cride:
 
@@ -41,8 +37,7 @@ Build Cride:
 To build a statically-linked `cride` binary:
 
 ```sh
-docker run -it --rm -v $PWD:/app -w /app jrei/crystal-alpine sh -c "\
-shards install
+docker run -it --rm -v $PWD:/app -w /app crystal:latest-alpine sh -c "\
 shards build --static --release
 chown 1000:1000 bin/cride"
 ```

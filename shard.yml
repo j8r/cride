@@ -1,17 +1,13 @@
 name: cride
-version: 0.2.0
+version: 0.2.1
 
 authors:
-  - Julien Reichardt <mi@jrei.ch>
+  - Julien Reichardt <contact@jrei.ch>
 
 description: A light Crystal IDE
 
 targets:
   cride:
     main: src/cli.cr
-
-dependencies:
-  clicr:
-    github: j8r/clicr
 
 license: ISC

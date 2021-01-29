@@ -1,18 +1,21 @@
-require "clicr"
 require "./terminal"
 
 module Cride::CLI
   extend self
 
-  def create
-    Clicr.create(
-      name: "cride",
-      info: "A light Crystal IDE/editor",
-      arguments: %w(files...),
-      action: "open_files",
-    )
-  rescue ex : Clicr::Help
-    puts ex; exit 0
+  def run(args = ARGV)
+    args.each do |arg|
+      case arg
+      when "--help", "-h"
+        puts <<-E
+      cride [files...]
+      
+      A light Crystal IDE/editor
+      E
+        exit 0
+      end
+      open_files ARGV
+    end
   rescue ex
     abort ex
   end
@@ -47,4 +50,4 @@ module Cride::CLI
   end
 end
 
-Cride::CLI.create
+Cride::CLI.run
