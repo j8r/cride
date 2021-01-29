@@ -22,7 +22,8 @@ struct Cride::Terminal
       @editor.width = screen_size.ws_col.to_i - 1
       @editor.height = screen_size.ws_row.to_i - 2
       render_editor
-      case (input = @input.read_raw).type
+      @input.read_raw
+      case @input.type?
       when Key::CTRL_C, Key::CTRL_Q, Key::Esc then break
       when Key::CTRL_S
         begin
@@ -48,7 +49,7 @@ struct Cride::Terminal
       when Key::Enter                  then @editor.add_line
       when Key::Insert                 then @editor.insert = !@editor.insert
       when nil
-        input.to_s.each_char do |char|
+        @input.each_char do |char|
           if char == '\r'
             @editor.add_line
           elsif @editor.insert

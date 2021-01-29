@@ -1,30 +1,36 @@
 struct Cride::Terminal
   struct Input
-    getter slice : Bytes = Bytes.new 6
     getter file : File
+
+    @buffer : Bytes = Bytes.new 512
+    @read_count = 0
 
     def initialize(@file : File)
     end
 
     # Read the raw input of the IO.
-    def read_raw : Input
-      @slice = Bytes.new 512
-      @file.raw &.read @slice
-      self
+    def read_raw : Nil
+      @read_count = @file.raw &.read @buffer
     end
 
-    def type : Key?
+    def type? : Key?
       if control?
-        Key.new @slice[0] &+ @slice[1] &+ @slice[2] &+ @slice[3] &+ @slice[4] &+ @slice[5]
+        value = 0_u8
+        @read_count.times do |i|
+          value &+= @buffer[i]
+        end
+        Key.new value
       end
     end
 
-    def to_s
-      String.new(@slice).rstrip '\u{0}'
+    def each_char(& : Char ->)
+      String.new(@buffer[0, @read_count]).each_char do |char|
+        yield char
+      end
     end
 
     def control?
-      case @slice[0].unsafe_chr
+      case @buffer[0].unsafe_chr
       when '\t', '\r' then false
       when .control?  then true
       else                 false
