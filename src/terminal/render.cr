@@ -4,6 +4,7 @@ struct Cride::Terminal
   private def cell_color(x, y)
     if y == @editor.cursor_y
       # highlight the selected line
+      File.write "debug", "#{x}|#{@editor.cursor_x_with_tabs}"
       if x == @editor.cursor_x_with_tabs
         # cursor position
         if @editor.insert
@@ -27,7 +28,7 @@ struct Cride::Terminal
     # Render starting at the page_y line until the end of the terminal height
     @editor.file.rows[@editor.page_y..@editor.page_y + @editor.height].each do |row|
       x = 0
-      width = @editor.width + @editor.tab_width row
+      width = @editor.width + @editor.additional_tab_width row
       # Start to render at the page_x until the end of the terminal width
       if row[@editor.page_x]?
         row[@editor.page_x..@editor.page_x + width].each_char do |char|
@@ -75,9 +76,9 @@ struct Cride::Terminal
       str << '/'
       str << @editor.file.rows.size
       str << " x:"
-      str << @editor.absolute_x + 1 + @editor.tab_before_absolute_width row
+      str << @editor.absolute_x + 1 + @editor.additional_tab_spaces_before_absolute_x row
       str << '/'
-      str << row.size + 1 + @editor.tab_width row
+      str << row.size + 1 + @editor.additional_tab_width row
     end
     # Return a colored info line
     if @editor.file.saved?

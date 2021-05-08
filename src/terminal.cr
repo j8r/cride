@@ -64,7 +64,7 @@ struct Cride::Terminal
   rescue ex
     reset
     abort <<-ERR
-    An error as occured. Please create an issue at https://github.com/j8r/cride with the steps to how reproduce this bug.
+    An error has occured. Please create an issue at https://github.com/j8r/cride with the steps to how reproduce this bug.
     
     cursor_y:  #{@editor.cursor_y + 1}, cursor_x: #{@editor.cursor_x + 1}
     page_y:    #{@editor.page_y + 1}, page_x: #{@editor.page_x + 1}
